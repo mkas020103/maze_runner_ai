@@ -1,4 +1,4 @@
-from maze_sprite import setup
+from setup import Setup
 
-game = setup()
+game = Setup()
 game.run()
