@@ -63,16 +63,16 @@ class Maze:
             for block in row:
                 if block == 0:
                     b = Block(self.wall, self.tile, col_count, row_count, xposition, yposition)
-                    self.wall_format.append(b.give())
-                    self.positions.append(b.give())
+                    self.wall_format.append([b.give(),'w'])
+                    self.positions.append([b.give(),'w'])
                 elif block == 7:
                     b = Block(self.path, self.tile, col_count, row_count, xposition,yposition)
-                    self.path_format.append(b.give())
-                    self.positions.append(b.give())
+                    self.path_format.append([b.give(),'p'])
+                    self.positions.append([b.give(),'p'])
                 elif block == 8:
                     b = Block(self.portal, self.tile, col_count, row_count, xposition, yposition)
-                    self.portal_format.append(b.give())
-                    self.positions.append(b.give())
+                    self.portal_format.append([b.give(),'l'])
+                    self.positions.append([b.give(),'l'])
                 col_count += 1
             row_count += 1
 
@@ -83,28 +83,36 @@ class Maze:
     def draw(self, win):
         # draw the walls, path, and portal
         for wall in self.wall_format:
-            win.blit(wall[0], wall[1])
+            win.blit(wall[0][0], wall[0][1])
         for path in self.path_format:
-            win.blit(path[0], path[1])
+            win.blit(path[0][0], path[0][1])
         for portal in self.portal_format:
-            win.blit(portal[0], portal[1])
+            win.blit(portal[0][0], portal[0][1])
 
 class Smoke:
     """
     Smoke that covers the map
     """
-    def __init__(self, map_to_cover, fog_size):
+    def __init__(self, map_to_cover, fog_size, path_format):
         self.cover = map_to_cover
+        self.path = path_format
         self.smoke_list = []
+
+        # Get the starting places
+        self.starting_places = []
+        self.find_starting_pos()
+
         # Load image
         self.smoke = pygame.image.load('img/fog.png')
+
         # Transform the image size
-        self.smoke = pygame.transform.scale(self.smoke, (fog_size+50, fog_size+50))
+        self.smoke = pygame.transform.scale(self.smoke, (fog_size+47, fog_size+47))
+
         # Calculate the offset to keep the smoke centered
         offset = (fog_size + 50 - fog_size) // 2
-        for fog_pos in map_to_cover:
-            # Check if fog_pos has at least two elements
-            if len(fog_pos) >= 2:
+
+        for fog_pos, type in map_to_cover:
+            if fog_pos not in self.starting_places:
                 # Make the image a "rectangle" object of pygame
                 smoke_rect = self.smoke.get_rect()
                 # Plot the x and y coordinates of the image
@@ -112,16 +120,62 @@ class Smoke:
                 smoke_rect.y = fog_pos[1][1] - offset
                 self.smoke_list.append((self.smoke, smoke_rect))
 
+    def find_starting_pos(self):
+        # Initialize variables to store edge coordinates
+        min_x = float('inf')
+        max_x = float('-inf')
+        min_y = float('inf')
+        max_y = float('-inf')
+        most_left = float('inf')
+        most_right = float('-inf')
+
+        unique = []
+        row = 1
+
+        # Find the min and max x and y values
+        for coord, type in self.cover:
+            if coord[1][0] < most_left:
+                most_left = coord[1][0]
+            if coord[1][0] > most_right:
+                most_right = coord[1][0]
+
+            if coord[1][0] < min_x and type == 'p':
+                min_x = coord[1][0]
+            if coord[1][0] > max_x and type == 'p':
+                max_x = coord[1][0]
+            if coord[1][1] < min_y and type == 'p':
+                min_y = coord[1][1]
+            if coord[1][1] > max_y and type == 'p':
+                max_y = coord[1][1]
+            if coord[1][1] not in unique:
+                unique.append((coord[1][1]))
+
+        row_len = len(unique)
+        current_row = 0
+        row_value = 0
+        # Collect the tuples that are at the edges #self.starting_places.append(coord)
+        for coord, type in self.path:
+            if coord[1][1] != row_value:
+                row_value = coord[1][1]
+                current_row += 1
+            if current_row == 1:
+                if coord[1][1] == min_y:
+                    self.starting_places.append(coord)
+            if current_row == row_len:
+                if coord[1][1] == max_y:
+                    self.starting_places.append(coord)
+            else:
+                if (coord[1][0] == min_x or coord[1][0] == max_x) and (coord[1][0] == most_left or coord[1][0] == most_right):
+                    self.starting_places.append(coord)
+
     def draw(self, win):
         for smoke in self.smoke_list:
             win.blit(smoke[0], smoke[1])
-
     
 
 class button:
     """
     button class in the game.
-
     Parameters:
         x & y (int) - coordinates on the screen where to place them
         width & height (int) - the size of the button

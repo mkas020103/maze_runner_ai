@@ -146,11 +146,11 @@ class Setup:
             if self.game_page:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.quit_button.is_over(pos):
-                        print('quit button clicked')
+                        #print('quit button clicked')
                         self.game_page = False
                         self.main_page = True
 
-                    for block in self.maze_maam.path_format:
+                    for block, type in self.maze_maam.path_format:
                         if pos[0] > block[1][0] and pos[0] < block[1][0] + block[1][2]:
                             if pos[1] > block[1][1] and pos[1] < block[1][1] + block[1][3]:
                                 self.current_pos = (block[1][0],block[1][1])
@@ -166,11 +166,11 @@ class Setup:
                 # If the mouse is click check through all possible pages
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.start_button.is_over(pos):
-                        print('start button clicked')
+                        #print('start button clicked')
                         self.main_page = False
                         self.difficulty_page = True
                     if self.instruction_button.is_over(pos):
-                        print('instruction button clicked')
+                        #print('instruction button clicked')
                         self.main_page = False
                         self.instruction_page = True
 
@@ -191,7 +191,7 @@ class Setup:
                 # If the mouse is click check through all possible difficulty level
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.easy_button.is_over(pos):
-                        print('easy button clicked')
+                        #print('easy button clicked')
                         self.d1 = Font('Demon 1', (520,300))
                         self.d2 = Font('Demon 2', (520,770))
                         self.d3 = Font('Demon 3', (1320,770))
@@ -201,9 +201,9 @@ class Setup:
                         self.maze_maam = Maze(1450, 150,  map.easy)
                         self.maze_a = Maze(150, 600,  map.easy)
 
-                        self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile)
-                        self.fog_dfs = Smoke(self.maze_dfs.position(), self.maze_dfs.tile)
-                        self.fog_a = Smoke(self.maze_a.position(), self.maze_a.tile)
+                        self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile, self.maze_bfs.path_format)
+                        self.fog_dfs = Smoke(self.maze_dfs.position(), self.maze_dfs.tile, self.maze_dfs.path_format)
+                        self.fog_a = Smoke(self.maze_a.position(), self.maze_a.tile, self.maze_a.path_format)
 
                         self.player = Player(self.maze_maam.tile)
 
@@ -212,7 +212,7 @@ class Setup:
                         self.game_page = True
 
                     elif self.medium_button.is_over(pos):
-                        print('medium button clicked')
+                        #print('medium button clicked')
                         self.d1 = Font('Demon 1', (720,250))
                         self.d2 = Font('Demon 2', (720,770))
                         self.d3 = Font('Demon 3', (1070,770))
@@ -222,9 +222,9 @@ class Setup:
                         self.maze_maam = Maze(1200, 50,  map.medium)
                         self.maze_a = Maze(150, 550,  map.medium)
 
-                        self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile)
-                        self.fog_dfs = Smoke(self.maze_dfs.position(), self.maze_dfs.tile)
-                        self.fog_a = Smoke(self.maze_a.position(), self.maze_a.tile)
+                        self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile, self.maze_bfs.path_format)
+                        self.fog_dfs = Smoke(self.maze_dfs.position(), self.maze_dfs.tile, self.maze_dfs.path_format)
+                        self.fog_a = Smoke(self.maze_a.position(), self.maze_a.tile, self.maze_a.path_format)
 
                         self.player = Player(self.maze_maam.tile)
 
@@ -232,7 +232,7 @@ class Setup:
 
                         self.game_page = True
                     elif self.hard_button.is_over(pos):
-                        print('hard button clicked')
+                        #print('hard button clicked')
                         self.d1 = Font('Demon 1', (720,250))
                         self.d2 = Font('Demon 2', (720,770))
                         self.d3 = Font('Demon 3', (1070,770))
@@ -242,9 +242,9 @@ class Setup:
                         self.maze_maam = Maze(1200, 50,  map.hard)
                         self.maze_a = Maze(150, 500,  map.hard)
 
-                        self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile)
-                        self.fog_dfs = Smoke(self.maze_dfs.position(), self.maze_dfs.tile)
-                        self.fog_a = Smoke(self.maze_a.position(), self.maze_a.tile)
+                        self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile, self.maze_bfs.path_format)
+                        self.fog_dfs = Smoke(self.maze_dfs.position(), self.maze_dfs.tile, self.maze_dfs.path_format)
+                        self.fog_a = Smoke(self.maze_a.position(), self.maze_a.tile, self.maze_a.path_format)
 
                         self.player = Player(self.maze_maam.tile)
 
@@ -252,7 +252,7 @@ class Setup:
 
                         self.game_page = True
                     elif self.god_button.is_over(pos):
-                        print('god button clicked')
+                        #print('god button clicked')
                         self.d1 = Font('Demon 1', (670,250))
                         self.d2 = Font('Demon 2', (670,755))
                         self.d3 = Font('Demon 3', (1070,755))
@@ -262,9 +262,9 @@ class Setup:
                         self.maze_maam = Maze(1200, 20,  map.god)
                         self.maze_a = Maze(150, 500,  map.god)
 
-                        self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile)
-                        self.fog_dfs = Smoke(self.maze_dfs.position(), self.maze_dfs.tile)
-                        self.fog_a = Smoke(self.maze_a.position(), self.maze_a.tile)
+                        self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile, self.maze_bfs.path_format)
+                        self.fog_dfs = Smoke(self.maze_dfs.position(), self.maze_dfs.tile, self.maze_dfs.path_format)
+                        self.fog_a = Smoke(self.maze_a.position(), self.maze_a.tile, self.maze_a.path_format)
 
                         self.player = Player(self.maze_maam.tile)
 
@@ -272,7 +272,7 @@ class Setup:
 
                         self.game_page = True
                     elif self.custom_button.is_over(pos):
-                        print('custom button clicked')
+                        #print('custom button clicked')
                         self.d1 = Font('Demon 1', (670,250))
                         self.d2 = Font('Demon 2', (670,755))
                         self.d3 = Font('Demon 3', (1070,755))
@@ -282,17 +282,17 @@ class Setup:
                         self.maze_maam = Maze(1200, 150,  map.custom)
                         self.maze_a = Maze(150, 600,  map.custom)
 
-                        self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile)
-                        self.fog_dfs = Smoke(self.maze_dfs.position(), self.maze_dfs.tile)
-                        self.fog_a = Smoke(self.maze_a.position(), self.maze_a.tile)
+                        self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile, self.maze_bfs.path_format)
+                        self.fog_dfs = Smoke(self.maze_dfs.position(), self.maze_dfs.tile, self.maze_dfs.path_format)
+                        self.fog_a = Smoke(self.maze_a.position(), self.maze_a.tile, self.maze_a.path_format)
 
                         self.player = Player(self.maze_maam.tile)
 
                         self.difficulty_page = False
-                        
+
                         self.game_page = True
                     elif self.back_m_button.is_over(pos):
-                        print('back button clicked')
+                        #print('back button clicked')
                         self.difficulty_page = False
                         self.main_page = True
                         
@@ -334,11 +334,11 @@ class Setup:
                 # If the mouse is click check through all possible pages
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.start_button.is_over(pos):
-                        print('start button clicked')
+                        #print('start button clicked')
                         self.instruction_page = False
                         self.difficulty_page = True
                     if self.back_button.is_over(pos):
-                        print('back button clicked')
+                        #print('back button clicked')
                         self.instruction_page = False
                         self.main_page = True
 
