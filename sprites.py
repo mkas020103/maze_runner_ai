@@ -17,6 +17,17 @@ class Block:
 
     def give(self):
         return (self.block, self.block_rect)
+    
+class Player:
+    def __init__(self, p_size):
+        self.player_img = pygame.image.load('img/player.png')
+        self.player_img = pygame.transform.scale(self.player_img, (p_size, p_size))
+        self.player_rect = self.player_img.get_rect()
+
+    def draw(self, win, pos):
+        self.player_rect.x = pos[0]
+        self.player_rect.y = pos[1]
+        win.blit(self.player_img, self.player_rect)
 
 class Maze:
     """
@@ -24,7 +35,10 @@ class Maze:
     """
     def __init__(self, xposition, yposition, maze_map = None):
         self.maze = maze_map
-        self.maze_format = []
+        self.wall_format = []
+        self.path_format = []
+        self.portal_format = []
+        self.positions = []
 
         # Load block image
         self.wall = pygame.image.load('img/concrete.jpg') 
@@ -33,36 +47,76 @@ class Maze:
 
         # Adjust block size
         if len(self.maze) <= 6:
-            tile = 50
+            self.tile = 50
         elif len(self.maze) <= 10:
-            tile = 40
+            self.tile = 40
         elif len(self.maze) <= 14:
-            tile = 30
+            self.tile = 30
         elif len(self.maze) <= 20:
-            tile = 22
+            self.tile = 22
         else: 
-            tile = 10
+            self.tile = 10
 
         row_count = 0
         for row in maze_map:
             col_count = 0
             for block in row:
                 if block == 0:
-                    b = Block(self.wall, tile, col_count, row_count, xposition, yposition)
-                    self.maze_format.append(b.give())
+                    b = Block(self.wall, self.tile, col_count, row_count, xposition, yposition)
+                    self.wall_format.append(b.give())
+                    self.positions.append(b.give())
                 elif block == 7:
-                    b = Block(self.path, tile, col_count, row_count, xposition,yposition)
-                    self.maze_format.append(b.give())
+                    b = Block(self.path, self.tile, col_count, row_count, xposition,yposition)
+                    self.path_format.append(b.give())
+                    self.positions.append(b.give())
                 elif block == 8:
-                    b = Block(self.portal, tile, col_count, row_count, xposition, yposition)
-                    self.maze_format.append(b.give())
+                    b = Block(self.portal, self.tile, col_count, row_count, xposition, yposition)
+                    self.portal_format.append(b.give())
+                    self.positions.append(b.give())
                 col_count += 1
             row_count += 1
+
+    def position(self):
+        return self.positions
                 
 
     def draw(self, win):
-        for block in self.maze_format:
-            win.blit(block[0], block[1])
+        # draw the walls, path, and portal
+        for wall in self.wall_format:
+            win.blit(wall[0], wall[1])
+        for path in self.path_format:
+            win.blit(path[0], path[1])
+        for portal in self.portal_format:
+            win.blit(portal[0], portal[1])
+
+class Smoke:
+    """
+    Smoke that covers the map
+    """
+    def __init__(self, map_to_cover, fog_size):
+        self.cover = map_to_cover
+        self.smoke_list = []
+        # Load image
+        self.smoke = pygame.image.load('img/fog.png')
+        # Transform the image size
+        self.smoke = pygame.transform.scale(self.smoke, (fog_size+50, fog_size+50))
+        # Calculate the offset to keep the smoke centered
+        offset = (fog_size + 50 - fog_size) // 2
+        for fog_pos in map_to_cover:
+            # Check if fog_pos has at least two elements
+            if len(fog_pos) >= 2:
+                # Make the image a "rectangle" object of pygame
+                smoke_rect = self.smoke.get_rect()
+                # Plot the x and y coordinates of the image
+                smoke_rect.x = fog_pos[1][0] - offset
+                smoke_rect.y = fog_pos[1][1] - offset
+                self.smoke_list.append((self.smoke, smoke_rect))
+
+    def draw(self, win):
+        for smoke in self.smoke_list:
+            win.blit(smoke[0], smoke[1])
+
+    
 
 class button:
     """
