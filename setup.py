@@ -1,105 +1,7 @@
 import pygame
 from pygame.locals import *
 import map
-
-class Block:
-    """
-    Block that build up the maze (i.e. path, portal, powerup, wall)
-    """
-    def __init__(self, block_image, tile, col, row, position):
-        self.tile_size = tile
-        # Transform the image size
-        self.block = pygame.transform.scale(block_image, (self.tile_size, self.tile_size))
-        # makes the image a "rectangle" object of pygame
-        self.block_rect = self.block.get_rect()
-        # Plot the x and y coordinates of the image
-        self.block_rect.x = col * self.tile_size + position
-        self.block_rect.y = row * self.tile_size + position
-
-    def give(self):
-        return (self.block, self.block_rect)
-
-class Maze:
-    """
-    Setup the maze into four parts.
-    """
-    def __init__(self, position, maze_map = None):
-        self.maze = maze_map
-        self.maze_format = []
-
-        # Load block image
-        self.wall = pygame.image.load('img/concrete.jpg') 
-        self.path = pygame.image.load('img/pathway.JPG') 
-        self.portal = pygame.image.load('img/portal.JPG') 
-
-        # Adjust block size
-        if len(self.maze) <= 6:
-            tile = 50
-        elif len(self.maze) <= 10:
-            tile = 40
-        elif len(self.maze) <= 20:
-            tile = 30
-        elif len(self.maze) <= 33:
-            tile = 15
-        else: 
-            tile = 10
-
-        row_count = 0
-        for row in maze_map:
-            col_count = 0
-            for block in row:
-                if block == 0:
-                    b = Block(self.wall, tile, col_count, row_count, position)
-                    self.maze_format.append(b.give())
-                elif block == 7:
-                    b = Block(self.path, tile, col_count, row_count, position)
-                    self.maze_format.append(b.give())
-                elif block == 8:
-                    b = Block(self.portal, tile, col_count, row_count, position)
-                    self.maze_format.append(b.give())
-                col_count += 1
-            row_count += 1
-                
-
-    def draw(self, win):
-        for block in self.maze_format:
-            win.blit(block[0], block[1])
-
-class button:
-    """
-    button class in the game.
-
-    Parameters:
-        x & y (int) - coordinates on the screen where to place them
-        width & height (int) - the size of the button
-        name (str) - the button name displayed
-        color (tuple of int) - color of the button you want in rgb format (rrr,ggg,bbb)
-    """
-    def __init__(self, x:int, y:int, width:int, height:int, color, name:str =''):
-        self.color = color
-        self.x = x
-        self.y = y
-        self.width = width 
-        self.height = height 
-        self.color = color
-        self.name = name
-    
-    def draw(self, win, outline, fsize):
-        pygame.draw.rect(win, outline, (self.x-2, self.y-2, self.width+4, self.height+4)) 
-        pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.height), 0)
-
-        if self.name != '':
-            font = pygame.font.SysFont('mvboli', fsize)
-            name = font.render(self.name, 1, (0, 0, 0))
-            win.blit(name, (self.x + (self.width/2 - name.get_width()/2), self.y + (self.height/2 - name.get_height()/2)))
-
-    def is_over(self, pos):
-        # pos is the mouse position or a tuple of (x, y) coordinates
-        if pos[0] > self.x and pos[0] < self.x + self.width:
-            if pos[1] > self.y and pos[1] < self.y + self.height:
-                return True
-            
-        return False
+from sprites import *
 
 class Setup:
     """
@@ -149,10 +51,18 @@ class Setup:
         self.god_button = button(x=1040, y=400, width=self.b_width, height=self.b_height, color=self.b_color, name="god") # god button
         self.custom_button = button(x=self.b_x, y=550, width=self.b_width, height=self.b_height, color=self.b_color, name="custom") # custom button
         self.back_m_button = button(x=self.b_x, y=700, width=self.b_width, height=self.b_height, color=self.b_color, name="back") # back to main button
-        self.quit_button = button(x=1450, y=50, width=75, height=30, color=self.b_color, name="quit") # quit button
+        self.quit_button = button(x=1650, y=15, width=75, height=30, color=self.b_color, name="quit") # quit button
+
+        # Text 
+        self.d1 = None
+        self.d2 = None
+        self.d3 = None
 
         # Default Maze map
         self.maze_maam = None
+        self.maze_dfs = None
+        self.maze_bfs = None
+        self.maze_a = None
 
         # Maze positions
         self.pos = []
@@ -165,6 +75,13 @@ class Setup:
             # show the elements depending on the page
             if self.game_page:
                 self.maze_maam.draw(self.screen)
+                self.maze_dfs.draw(self.screen)
+                self.maze_bfs.draw(self.screen)
+                self.maze_a.draw(self.screen)
+                self.d1.draw(self.screen)
+                self.d2.draw(self.screen)
+                self.d3.draw(self.screen)
+
                 self.quit_button.draw(self.screen, (18, 1, 1), 30)
             elif self.main_page:
                 self.start_button.draw(self.screen, (18, 1, 1), 60)
@@ -244,27 +161,54 @@ class Setup:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.easy_button.is_over(pos):
                         print('easy button clicked')
-                        self.maze_maam = Maze(200, map.easy)
+                        self.d1 = Font('Demon 1', (520,300))
+                        self.d2 = Font('Demon 2', (520,770))
+                        self.d3 = Font('Demon 3', (1320,770))
+                        self.maze_bfs = Maze(150, 150,  map.easy)
+                        self.maze_dfs = Maze(1450, 600,  map.easy)
+                        self.maze_maam = Maze(1450, 150,  map.easy)
+                        self.maze_a = Maze(150, 600,  map.easy)
                         self.difficulty_page = False
                         self.game_page = True
                     elif self.medium_button.is_over(pos):
                         print('medium button clicked')
-                        self.maze_maam = Maze(200, map.medium)
+                        self.d1 = Font('Demon 1', (720,250))
+                        self.d2 = Font('Demon 2', (720,770))
+                        self.d3 = Font('Demon 3', (1070,770))
+                        self.maze_bfs = Maze(150, 50, map.medium)
+                        self.maze_dfs = Maze(1200, 550,  map.medium)
+                        self.maze_maam = Maze(1200, 50,  map.medium)
+                        self.maze_a = Maze(150, 550,  map.medium)
                         self.difficulty_page = False
                         self.game_page = True
                     elif self.hard_button.is_over(pos):
                         print('hard button clicked')
-                        self.maze_maam = Maze(200, map.hard)
+                        self.d1 = Font('Demon 1', (720,250))
+                        self.d2 = Font('Demon 2', (720,770))
+                        self.d3 = Font('Demon 3', (1070,770))
+                        self.maze_bfs = Maze(150, 50, map.hard)
+                        self.maze_dfs = Maze(1200, 500,  map.hard)
+                        self.maze_maam = Maze(1200, 50,  map.hard)
+                        self.maze_a = Maze(150, 500,  map.hard)
                         self.difficulty_page = False
                         self.game_page = True
                     elif self.god_button.is_over(pos):
                         print('god button clicked')
-                        self.maze_maam = Maze(200, map.god)
+                        self.d1 = Font('Demon 1', (670,250))
+                        self.d2 = Font('Demon 2', (670,755))
+                        self.d3 = Font('Demon 3', (1070,755))
+                        self.maze_bfs = Maze(150, 20, map.god)
+                        self.maze_dfs = Maze(1200, 500,  map.god)
+                        self.maze_maam = Maze(1200, 20,  map.god)
+                        self.maze_a = Maze(150, 500,  map.god)
                         self.difficulty_page = False
                         self.game_page = True
                     elif self.custom_button.is_over(pos):
                         print('custom button clicked')
-                        self.maze = Maze(200, map.custom)
+                        self.maze_bfs = Maze(150, 150, map.custom)
+                        self.maze_dfs = Maze(1200, 600,  map.custom)
+                        self.maze_maam = Maze(1200, 150,  map.custom)
+                        self.maze_a = Maze(150, 600,  map.custom)
                         self.difficulty_page = False
                         self.game_page = True
                     elif self.back_m_button.is_over(pos):
