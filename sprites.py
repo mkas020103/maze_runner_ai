@@ -19,17 +19,38 @@ class Block:
         return (self.block, self.block_rect)
     
 class Player:
-    def __init__(self, p_size):
+    def __init__(self, p_size, starting_places, unexplored_path):
         self.player_img = pygame.image.load('img/player.png')
         self.player_img = pygame.transform.scale(self.player_img, (p_size, p_size))
         self.player_rect = self.player_img.get_rect()
         self.explored = []
-        self.unexplored = []
+        self.unexplored = [(pos[1][0], pos[1][1]) for pos, type in unexplored_path] # paths that are unexplored
+        self.can_explore = [(pos[0], pos[1]) for img, pos in starting_places] # paths that the player can currently explore
 
     def draw(self, win, pos):
         self.player_rect.x = pos[0]
         self.player_rect.y = pos[1]
         win.blit(self.player_img, self.player_rect)
+
+    def check_place(self, current_pos, block_size):
+        # If its not a valid move
+        if current_pos in self.explored:
+            return False
+        if current_pos not in self.can_explore:
+            return False
+
+        # Calculate the adjacent tile
+        adjacent_tile = [(current_pos[0], current_pos[1] - block_size), (current_pos[0] - block_size, current_pos[1]), 
+                         (current_pos[0] + block_size, current_pos[1]), (current_pos[0], current_pos[1] + block_size)]
+        
+        # iterate over each tile, updating the unexplored to its adjacent path 
+        # and adding current tile to the explored path
+        for pos in self.unexplored:
+            if (pos in adjacent_tile) and (pos not in self.can_explore):
+                self.can_explore.append(pos)
+
+        self.explored.append(current_pos)
+        return True
 
 class Maze:
     """
@@ -55,7 +76,7 @@ class Maze:
         elif len(self.maze) <= 14:
             self.tile = 30
         elif len(self.maze) <= 20:
-            self.tile = 22
+            self.tile = 20
         else: 
             self.tile = 10
 
@@ -96,7 +117,7 @@ class Smoke:
     """
     Smoke that covers the map
     """
-    def __init__(self, map_to_cover, fog_size, path_format):
+    def __init__(self, map_to_cover, fog_size, path_format, fog_adjustment):
         self.cover = map_to_cover
         self.path = path_format
         self.smoke_list = []
@@ -109,18 +130,18 @@ class Smoke:
         self.smoke = pygame.image.load('img/fog.png')
 
         # Transform the image size
-        self.smoke = pygame.transform.scale(self.smoke, (fog_size+1, fog_size+1)) # 47 best size
+        self.smoke = pygame.transform.scale(self.smoke, (fog_size + fog_adjustment, fog_size + fog_adjustment)) # 47 best size
 
         # Calculate the offset to keep the smoke centered
-        offset = (fog_size + 1 - fog_size) // 2  # 47 best size
+        self.offset = (fog_size + fog_adjustment - fog_size) // 2  # 47 best size
     
         for fog_pos, type in map_to_cover:
             if fog_pos not in self.starting_places:
                 # Make the image a "rectangle" object of pygame
                 smoke_rect = self.smoke.get_rect()
                 # Plot the x and y coordinates of the image
-                smoke_rect.x = fog_pos[1][0] - offset
-                smoke_rect.y = fog_pos[1][1] - offset
+                smoke_rect.x = fog_pos[1][0] - self.offset
+                smoke_rect.y = fog_pos[1][1] - self.offset
                 self.smoke_list.append((self.smoke, smoke_rect))
 
     def find_starting_pos(self):
@@ -179,12 +200,65 @@ class Smoke:
 
     def remove_adjacent_smokes(self, player_pos, block_size):
         # Calculate the adjacent fogs
-        adjacent_fogs = [(player_pos[0], player_pos[1] - block_size), (player_pos[0] - block_size, player_pos[1]), 
-                         (player_pos[0] + block_size, player_pos[1]), (player_pos[0], player_pos[1] + block_size)]
-
+        padding_ul = block_size + self.offset
+        padding_rd = block_size - self.offset
+        adjacent_fogs = [
+            (player_pos[0] + padding_rd, player_pos[1] - block_size + padding_rd),               # Right
+            (player_pos[0] - block_size + padding_rd, player_pos[1] + padding_rd),                    # Down
+            (player_pos[0] + block_size - padding_ul, player_pos[1] - padding_ul),  # Up
+            (player_pos[0] - padding_ul, player_pos[1] + block_size - padding_ul)   # Left
+        ]
         # Update smoke_list, removing adjacent fogs
         self.smoke_list = [unremoved_block for unremoved_block in self.smoke_list if (unremoved_block[1][0],unremoved_block[1][1]) not in adjacent_fogs]
     
+class mode:
+    """
+    The font, maze, player, and fog settings of each mode
+    """
+    def __init__(self, font_list, maze_list, fog_adjustment):
+        # Font setting
+        self.d1 = Font(font_list[0][0], font_list[0][1])
+        self.d2 = Font(font_list[1][0], font_list[1][1])
+        self.d3 = Font(font_list[2][0], font_list[2][1])
+
+        # Maze setting
+        self.maze_bfs = Maze(maze_list[0][0], maze_list[0][1], maze_list[0][2])
+        self.maze_dfs = Maze(maze_list[1][0], maze_list[1][1], maze_list[1][2])
+        self.maze_maam = Maze(maze_list[2][0], maze_list[2][1], maze_list[2][2])
+        self.maze_a = Maze(maze_list[3][0], maze_list[3][1], maze_list[3][2])
+
+        # Fog setting
+        self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile, self.maze_bfs.path_format, fog_adjustment)
+        self.fog_dfs = Smoke(self.maze_dfs.position(), self.maze_dfs.tile, self.maze_dfs.path_format, fog_adjustment)
+        self.fog_a = Smoke(self.maze_a.position(), self.maze_a.tile, self.maze_a.path_format, fog_adjustment)
+        self.fog_maam = Smoke(self.maze_maam.position(), self.maze_maam.tile, self.maze_maam.path_format, fog_adjustment)
+
+        # Player setting
+        #print('fog: ',self.fog_maam.starting_places[1][1][0], '\nmaze: ',self.maze_maam.path_format[0][0][1][0])
+        # Reverse-engineer the offset for player placement
+        '''self.player_starting_places = [
+            (y[0] + self.fog_maam.offset) for x, y in self.fog_maam.starting_places
+        ]
+        print('adjusted player starting places:', self.player_starting_places[1])'''
+        self.player = Player(self.maze_maam.tile, self.fog_maam.starting_places, self.maze_maam.path_format)
+
+    def draw(self, win):
+        # Draw maze
+        self.maze_maam.draw(win)
+        self.maze_dfs.draw(win)
+        self.maze_bfs.draw(win)
+        self.maze_a.draw(win)
+
+        # Draw text
+        self.d1.draw(win)
+        self.d2.draw(win)
+        self.d3.draw(win)
+
+        # Draw fog
+        self.fog_bfs.draw(win)
+        self.fog_dfs.draw(win)
+        self.fog_a.draw(win)
+        self.fog_maam.draw(win)
 
 class button:
     """

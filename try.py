@@ -1,44 +1,39 @@
-# Define the 2D list of tuples
-coordinates = [
-    [(0, 1), (7, 2), (2, 30), (0, 4), (0, 5)],
-    [(6, 6), (7, 7), (7, 8), (7, 9), (0, 10)],
-    [(5, 11), (7, 12), (0, 13), (7, 14), (0, 0)],
-    [(4, 16), (2, 17), (7, 18), (7, 19), (2, 20)],
-    [(4, 0), (8, 22), (7, 23), (0, 24), (1, 25)],
-    [(7, 0), (0, 27), (1, 30), (7, 29), (0, 30)],
-]
+import pygame
+from pygame.locals import *
+from sprites import Maze
+import map
+class Smoke:
+    """
+    Smoke that covers the map
+    """
+    def __init__(self, map_to_cover, fog_size, path_format):
+        self.cover = map_to_cover
+        self.path = path_format
+        self.smoke_list = []
 
-# Function to find and print tuples at the edges
-def find_edge_tuples(matrix):
-    # Initialize variables to store edge coordinates
-    min_x = float('inf')
-    max_x = float('-inf')
-    min_y = float('inf')
-    max_y = float('-inf')
+        # Get the starting places
+        self.starting_places = []
+        self.find_starting_pos()
 
-    edge_tuples = []
+        # Load image
+        self.smoke = pygame.image.load('img/fog.png')
 
-    # Find the min and max x and y values
-    for row in matrix:
-        for x, y in row:
-            if x < min_x:
-                min_x = x
-            if x > max_x:
-                max_x = x
-            if y < min_y:
-                min_y = y
-            if y > max_y:
-                max_y = y
+        # Transform the image size
+        self.smoke = pygame.transform.scale(self.smoke, (fog_size+46, fog_size+46)) # 46 best size
 
-    # Collect the tuples that are at the edges
-    for row in matrix:
-        for tuple in row:
-            if tuple[0] == min_x or tuple[0] == max_x or tuple[1] == min_y or tuple[1] == max_y:
-                edge_tuples.append(tuple)
-                print(f'found tuple {tuple} at the edge')
+        # Calculate the offset to keep the smoke centered
+        self.offset = (fog_size + 46 - fog_size) // 2  # 47 best size
+    
+        for fog_pos, type in map_to_cover:
+            if fog_pos not in self.starting_places:
+                # Make the image a "rectangle" object of pygame
+                smoke_rect = self.smoke.get_rect()
+                # Plot the x and y coordinates of the image
+                smoke_rect.x = fog_pos[1][0] - self.offset
+                smoke_rect.y = fog_pos[1][1] - self.offset
+                self.smoke_list.append((self.smoke, smoke_rect))
 
-    return edge_tuples
 
-# Call the function
-edge_tuples = find_edge_tuples(coordinates)
-print("Edge tuples:", edge_tuples)
+maze_list = [(150, 50, map.medium), (1200, 550,  map.medium), (1200, 50,  map.medium), (150, 550,  map.medium)]
+maze_maam = Maze(maze_list[2][0], maze_list[2][1], maze_list[2][2])
+fog_maam = Smoke(maze_maam.position(), maze_maam.tile, maze_maam.path_format)
