@@ -56,7 +56,7 @@ class Maze:
     """
     Setup the maze into four parts.
     """
-    def __init__(self, xposition, yposition, maze_map = None):
+    def __init__(self, xposition, yposition, maze_map, custom_size):
         self.maze = maze_map
         self.wall_format = []
         self.path_format = []
@@ -69,16 +69,19 @@ class Maze:
         self.portal = pygame.image.load('img/portal.JPG') 
 
         # Adjust block size
-        if len(self.maze) <= 6:
-            self.tile = 50
-        elif len(self.maze) <= 10:
-            self.tile = 40
-        elif len(self.maze) <= 14:
-            self.tile = 30
-        elif len(self.maze) <= 20:
-            self.tile = 20
-        else: 
-            self.tile = 10
+        if custom_size != None:
+            self.tile = custom_size
+        else:
+            if len(self.maze) <= 6:
+                self.tile = 50
+            elif len(self.maze) <= 10:
+                self.tile = 40
+            elif len(self.maze) <= 14:
+                self.tile = 30
+            elif len(self.maze) <= 20:
+                self.tile = 20
+            else: 
+                self.tile = 10
 
         row_count = 0
         # Add the type of block on a specific screen position
@@ -215,17 +218,17 @@ class mode:
     """
     The font, maze, player, and fog settings of each mode
     """
-    def __init__(self, font_list, maze_list, fog_adjustment):
+    def __init__(self, font_list, maze_list, fog_adjustment, custom_map_size=None):
         # Font setting
         self.d1 = Font(font_list[0][0], font_list[0][1])
         self.d2 = Font(font_list[1][0], font_list[1][1])
         self.d3 = Font(font_list[2][0], font_list[2][1])
 
         # Maze setting
-        self.maze_bfs = Maze(maze_list[0][0], maze_list[0][1], maze_list[0][2])
-        self.maze_dfs = Maze(maze_list[1][0], maze_list[1][1], maze_list[1][2])
-        self.maze_maam = Maze(maze_list[2][0], maze_list[2][1], maze_list[2][2])
-        self.maze_a = Maze(maze_list[3][0], maze_list[3][1], maze_list[3][2])
+        self.maze_bfs = Maze(maze_list[0][0], maze_list[0][1], maze_list[0][2], custom_map_size)
+        self.maze_dfs = Maze(maze_list[1][0], maze_list[1][1], maze_list[1][2], custom_map_size)
+        self.maze_maam = Maze(maze_list[2][0], maze_list[2][1], maze_list[2][2], custom_map_size)
+        self.maze_a = Maze(maze_list[3][0], maze_list[3][1], maze_list[3][2], custom_map_size)
 
         # Fog setting
         self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile, self.maze_bfs.path_format, fog_adjustment)
@@ -234,12 +237,6 @@ class mode:
         self.fog_maam = Smoke(self.maze_maam.position(), self.maze_maam.tile, self.maze_maam.path_format, fog_adjustment)
 
         # Player setting
-        #print('fog: ',self.fog_maam.starting_places[1][1][0], '\nmaze: ',self.maze_maam.path_format[0][0][1][0])
-        # Reverse-engineer the offset for player placement
-        '''self.player_starting_places = [
-            (y[0] + self.fog_maam.offset) for x, y in self.fog_maam.starting_places
-        ]
-        print('adjusted player starting places:', self.player_starting_places[1])'''
         self.player = Player(self.maze_maam.tile, self.fog_maam.starting_places, self.maze_maam.path_format)
 
     def draw(self, win):

@@ -67,5 +67,21 @@ god = [
 
 # si maam bahala dito
 custom = [
-
+   
 ]
+
+def calc_custom():
+    if len(custom) <=3:
+        return 38, 38
+    elif len(custom) <=10:
+        return 34, 34
+    elif len(custom) <=14:
+        return 30, 30
+    elif len(custom) <=20:
+        return 20, 20
+    elif len(custom) <=25:
+        return 16, 16
+    elif len(custom) <=30:
+        return 10, 10
+    else:
+        return 0, 0

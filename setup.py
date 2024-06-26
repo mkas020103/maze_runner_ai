@@ -189,7 +189,7 @@ class Setup:
                         self.game_page = True
 
                     elif self.hard_button.is_over(pos):
-                        font_list = [('BFS', (720,250)), ('DFS', (720,770)), ('A', (1070,770))]
+                        font_list = [('BFS', (720,250)), ('DFS', (720,770)), ('A', (1085,770))]
                         maze_list = [(150, 50, map.hard), (1200, 500,  map.hard), (1200, 50,  map.hard), (150, 500,  map.hard)]
                         self.mode = mode(font_list, maze_list,34)
 
@@ -197,17 +197,17 @@ class Setup:
                         self.game_page = True
 
                     elif self.god_button.is_over(pos):
-                        font_list = [('BFS', (670,250)), ('DFS', (670,755)), ('A', (1070,755))]
-                        maze_list = [(150, 20, map.god), (1200, 500,  map.god), (1200, 20,  map.god), (150, 500,  map.god)]
+                        font_list = [('BFS', (670,250)), ('DFS', (670,755)), ('A', (1100,755))]
+                        maze_list = [(125, 20, map.god), (1200, 500,  map.god), (1200, 20,  map.god), (125, 500,  map.god)]
                         self.mode = mode(font_list, maze_list, 20)
 
                         self.difficulty_page = False
                         self.game_page = True
-
                     elif self.custom_button.is_over(pos):
-                        font_list = [('BFS', (670,250)), ('DFS', (670,755)), ('A', (1070,755))]
-                        maze_list = [(150, 150, map.custom), (1200, 600,  map.custom), (1200, 150,  map.custom), (150, 600,  map.custom)]
-                        self.mode = mode(font_list, maze_list,46)
+                        font_list = [('BFS', (670,30)), ('DFS', (670,950)), ('A', (1070,950))]
+                        maze_list = [(100, 150, map.custom), (1000, 600,  map.custom), (1000, 150,  map.custom), (100, 600,  map.custom)]
+                        fog, map_size = map.calc_custom()
+                        self.mode = mode(font_list, maze_list, fog, map_size)
 
                         self.difficulty_page = False
                         self.game_page = True
