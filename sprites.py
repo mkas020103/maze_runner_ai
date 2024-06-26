@@ -23,6 +23,8 @@ class Player:
         self.player_img = pygame.image.load('img/player.png')
         self.player_img = pygame.transform.scale(self.player_img, (p_size, p_size))
         self.player_rect = self.player_img.get_rect()
+        self.explored = []
+        self.unexplored = []
 
     def draw(self, win, pos):
         self.player_rect.x = pos[0]
@@ -58,6 +60,7 @@ class Maze:
             self.tile = 10
 
         row_count = 0
+        # Add the type of block on a specific screen position
         for row in maze_map:
             col_count = 0
             for block in row:
@@ -106,11 +109,11 @@ class Smoke:
         self.smoke = pygame.image.load('img/fog.png')
 
         # Transform the image size
-        self.smoke = pygame.transform.scale(self.smoke, (fog_size+47, fog_size+47))
+        self.smoke = pygame.transform.scale(self.smoke, (fog_size+1, fog_size+1)) # 47 best size
 
         # Calculate the offset to keep the smoke centered
-        offset = (fog_size + 50 - fog_size) // 2
-
+        offset = (fog_size + 1 - fog_size) // 2  # 47 best size
+    
         for fog_pos, type in map_to_cover:
             if fog_pos not in self.starting_places:
                 # Make the image a "rectangle" object of pygame
@@ -158,10 +161,12 @@ class Smoke:
             if coord[1][1] != row_value:
                 row_value = coord[1][1]
                 current_row += 1
+
+            # Find the starting points found on the maze edges
             if current_row == 1:
                 if coord[1][1] == min_y:
                     self.starting_places.append(coord)
-            if current_row == row_len:
+            elif current_row == row_len:
                 if coord[1][1] == max_y:
                     self.starting_places.append(coord)
             else:
@@ -171,6 +176,14 @@ class Smoke:
     def draw(self, win):
         for smoke in self.smoke_list:
             win.blit(smoke[0], smoke[1])
+
+    def remove_adjacent_smokes(self, player_pos, block_size):
+        # Calculate the adjacent fogs
+        adjacent_fogs = [(player_pos[0], player_pos[1] - block_size), (player_pos[0] - block_size, player_pos[1]), 
+                         (player_pos[0] + block_size, player_pos[1]), (player_pos[0], player_pos[1] + block_size)]
+
+        # Update smoke_list, removing adjacent fogs
+        self.smoke_list = [unremoved_block for unremoved_block in self.smoke_list if (unremoved_block[1][0],unremoved_block[1][1]) not in adjacent_fogs]
     
 
 class button:

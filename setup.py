@@ -106,6 +106,7 @@ class Setup:
                 self.fog_bfs.draw(self.screen)
                 self.fog_dfs.draw(self.screen)
                 self.fog_a.draw(self.screen)
+                self.fog_maam.draw(self.screen)
 
             elif self.main_page:
                 self.start_button.draw(self.screen, (18, 1, 1), 60)
@@ -147,13 +148,16 @@ class Setup:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.quit_button.is_over(pos):
                         #print('quit button clicked')
+                        self.current_pos = None
                         self.game_page = False
                         self.main_page = True
 
                     for block, type in self.maze_maam.path_format:
+                        # block[1][0] = x coord, block[1][1] = y coord, block[1][2] = block_width, block[1][3] = block_height,
                         if pos[0] > block[1][0] and pos[0] < block[1][0] + block[1][2]:
                             if pos[1] > block[1][1] and pos[1] < block[1][1] + block[1][3]:
                                 self.current_pos = (block[1][0],block[1][1])
+                                self.fog_maam.remove_adjacent_smokes(self.current_pos, block[1][2])
 
                 if event.type == pygame.MOUSEMOTION:
                     if self.quit_button.is_over(pos):
@@ -192,9 +196,9 @@ class Setup:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.easy_button.is_over(pos):
                         #print('easy button clicked')
-                        self.d1 = Font('Demon 1', (520,300))
-                        self.d2 = Font('Demon 2', (520,770))
-                        self.d3 = Font('Demon 3', (1320,770))
+                        self.d1 = Font('BFS', (520,300))
+                        self.d2 = Font('DFS', (520,770))
+                        self.d3 = Font('A', (1320,770))
 
                         self.maze_bfs = Maze(150, 150,  map.easy)
                         self.maze_dfs = Maze(1450, 600,  map.easy)
@@ -204,6 +208,7 @@ class Setup:
                         self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile, self.maze_bfs.path_format)
                         self.fog_dfs = Smoke(self.maze_dfs.position(), self.maze_dfs.tile, self.maze_dfs.path_format)
                         self.fog_a = Smoke(self.maze_a.position(), self.maze_a.tile, self.maze_a.path_format)
+                        self.fog_maam = Smoke(self.maze_maam.position(), self.maze_maam.tile, self.maze_maam.path_format)
 
                         self.player = Player(self.maze_maam.tile)
 
@@ -213,9 +218,9 @@ class Setup:
 
                     elif self.medium_button.is_over(pos):
                         #print('medium button clicked')
-                        self.d1 = Font('Demon 1', (720,250))
-                        self.d2 = Font('Demon 2', (720,770))
-                        self.d3 = Font('Demon 3', (1070,770))
+                        self.d1 = Font('BFS', (720,250))
+                        self.d2 = Font('DFS', (720,770))
+                        self.d3 = Font('A', (1070,770))
 
                         self.maze_bfs = Maze(150, 50, map.medium)
                         self.maze_dfs = Maze(1200, 550,  map.medium)
@@ -225,6 +230,7 @@ class Setup:
                         self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile, self.maze_bfs.path_format)
                         self.fog_dfs = Smoke(self.maze_dfs.position(), self.maze_dfs.tile, self.maze_dfs.path_format)
                         self.fog_a = Smoke(self.maze_a.position(), self.maze_a.tile, self.maze_a.path_format)
+                        self.fog_maam = Smoke(self.maze_maam.position(), self.maze_maam.tile, self.maze_maam.path_format)
 
                         self.player = Player(self.maze_maam.tile)
 
@@ -233,15 +239,16 @@ class Setup:
                         self.game_page = True
                     elif self.hard_button.is_over(pos):
                         #print('hard button clicked')
-                        self.d1 = Font('Demon 1', (720,250))
-                        self.d2 = Font('Demon 2', (720,770))
-                        self.d3 = Font('Demon 3', (1070,770))
+                        self.d1 = Font('BFS', (720,250))
+                        self.d2 = Font('DFS', (720,770))
+                        self.d3 = Font('A', (1070,770))
 
                         self.maze_bfs = Maze(150, 50, map.hard)
                         self.maze_dfs = Maze(1200, 500,  map.hard)
                         self.maze_maam = Maze(1200, 50,  map.hard)
                         self.maze_a = Maze(150, 500,  map.hard)
 
+                        self.fog_maam = Smoke(self.maze_maam.position(), self.maze_maam.tile, self.maze_maam.path_format)
                         self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile, self.maze_bfs.path_format)
                         self.fog_dfs = Smoke(self.maze_dfs.position(), self.maze_dfs.tile, self.maze_dfs.path_format)
                         self.fog_a = Smoke(self.maze_a.position(), self.maze_a.tile, self.maze_a.path_format)
@@ -253,9 +260,9 @@ class Setup:
                         self.game_page = True
                     elif self.god_button.is_over(pos):
                         #print('god button clicked')
-                        self.d1 = Font('Demon 1', (670,250))
-                        self.d2 = Font('Demon 2', (670,755))
-                        self.d3 = Font('Demon 3', (1070,755))
+                        self.d1 = Font('BFS', (670,250))
+                        self.d2 = Font('DFS', (670,755))
+                        self.d3 = Font('A', (1070,755))
 
                         self.maze_bfs = Maze(150, 20, map.god)
                         self.maze_dfs = Maze(1200, 500,  map.god)
@@ -265,6 +272,7 @@ class Setup:
                         self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile, self.maze_bfs.path_format)
                         self.fog_dfs = Smoke(self.maze_dfs.position(), self.maze_dfs.tile, self.maze_dfs.path_format)
                         self.fog_a = Smoke(self.maze_a.position(), self.maze_a.tile, self.maze_a.path_format)
+                        self.fog_maam = Smoke(self.maze_maam.position(), self.maze_maam.tile, self.maze_maam.path_format)
 
                         self.player = Player(self.maze_maam.tile)
 
@@ -273,9 +281,9 @@ class Setup:
                         self.game_page = True
                     elif self.custom_button.is_over(pos):
                         #print('custom button clicked')
-                        self.d1 = Font('Demon 1', (670,250))
-                        self.d2 = Font('Demon 2', (670,755))
-                        self.d3 = Font('Demon 3', (1070,755))
+                        self.d1 = Font('BFS', (670,250))
+                        self.d2 = Font('DFS', (670,755))
+                        self.d3 = Font('A', (1070,755))
 
                         self.maze_bfs = Maze(150, 150, map.custom)
                         self.maze_dfs = Maze(1200, 600,  map.custom)
@@ -285,6 +293,7 @@ class Setup:
                         self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile, self.maze_bfs.path_format)
                         self.fog_dfs = Smoke(self.maze_dfs.position(), self.maze_dfs.tile, self.maze_dfs.path_format)
                         self.fog_a = Smoke(self.maze_a.position(), self.maze_a.tile, self.maze_a.path_format)
+                        self.fog_maam = Smoke(self.maze_maam.position(), self.maze_maam.tile, self.maze_maam.path_format)
 
                         self.player = Player(self.maze_maam.tile)
 
