@@ -46,6 +46,7 @@ class Player:
     
 class A_agent():
     def __init__(self, p_size, starting_place, unexplored_path, portal):
+        self.block_size = p_size
         self.agent = pygame.image.load('img/demon.png')
         self.agent = pygame.transform.scale(self.agent, (p_size, p_size))
         self.agent_rect = self.agent.get_rect()
@@ -53,6 +54,7 @@ class A_agent():
         self.portal = np.array([(pos[1][0], pos[1][1]) for pos, type in portal])
         self.explored = []
         self.unexplored = np.array([(pos[1][0], pos[1][1]) for pos, type in unexplored_path])
+        self.can_explore = []
         self.start = np.array([(pos[0], pos[1]) for img, pos in starting_place])
         self.is_first = 0
         
@@ -67,20 +69,48 @@ class A_agent():
 
         # Dictionary of the unexplored path with its respective value
         self.total_cost_dict = {tuple(path): cost for path, cost in zip(self.unexplored, self.total_cost)}
-        
-        #print('Unexplored paths:', self.unexplored)
-        #print('Manhattan distances:', self.manhattan)
-        #print('Initial costs (g-values):', self.cost)
-        #print('Total estimated cost (f-values):', self.total_cost)
-        #print('Total estimated cost (f-values) Dictionary:', self.total_cost_dict)
-        print('starting position: ',self.start)
 
     def best_move(self):
         self.is_first += 1
         if self.is_first != 1:
-            pass
+            # Calculate the adjacent tile
+            adjacent_tile = np.array([(self.current_pos[0], self.current_pos[1] - self.block_size), (self.current_pos[0] - self.block_size, self.current_pos[1]), 
+                         (self.current_pos[0] + self.block_size, self.current_pos[1]), (self.current_pos[0], self.current_pos[1] + self.block_size)])
+
+            # If the portal is one of the adjacent tile
+            for tile in adjacent_tile:
+                if tuple(tile) == tuple(self.portal[0]):
+                    return tuple(tile)
+                
+            # Add the adjacent tile that can be explored
+            adjacent_paths = [(tuple(adj), self.total_cost_dict[tuple(adj)]) for adj in adjacent_tile if tuple(adj) in self.total_cost_dict]
+            self.can_explore.extend(adjacent_paths)
+            #print('Length of can explore: ',len(self.can_explore))
+            print('can_explored: ',self.can_explore)
+            print('explored: ',self.explored)
+            print('not explored: ',self.total_cost_dict)
+
+            # Find the tuple with the minimum cost
+            minimum_cost_value = min(cost for _, cost in self.can_explore)
+            minimum_cost_path = next(path for path, cost in adjacent_paths if cost == minimum_cost_value)
+            print('value: ',minimum_cost_value,' path: ', minimum_cost_path)
+            
+            # Update the can explore, unexplored and explored part
+            del self.total_cost_dict[minimum_cost_path]
+            self.can_explore.remove((minimum_cost_path,minimum_cost_value))
+            self.explored.append(minimum_cost_path)
+
+            # Update the current path and return it
+            self.current_pos = minimum_cost_path
+            return minimum_cost_path
+            
         else:
+            # Set the starting point
             self.current_pos = self.start[0]
+
+            # Update the unexplored and explored part
+            del self.total_cost_dict[tuple(self.start[0])]
+            self.explored.append(tuple(self.start[0]))
             return tuple(self.start[0])
         
     def draw(self, win, pos):

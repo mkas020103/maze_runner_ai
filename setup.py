@@ -127,7 +127,7 @@ class Setup:
                         self.game_page = False
                         self.main_page = True
 
-                    # Check through all pathway
+                    # Check through all maam pathway
                     for block, type in self.mode.maze_maam.path_format:
                         # block[1][0] = x coord, block[1][1] = y coord, block[1][2] = block_width, block[1][3] = block_height,
                             if pos[0] > block[1][0] and pos[0] < block[1][0] + block[1][2]:
@@ -137,7 +137,7 @@ class Setup:
                                         self.current_pos = (block[1][0],block[1][1])
                                         self.mode.fog_maam.remove_adjacent_smokes(self.current_pos, block[1][2])
 
-                                        # Modify the agent position
+                                        # Modify the position of the AI and Remove adjacent clouds
                                         self.current_pos_a = self.mode.a_agent.best_move()
                                         self.mode.fog_a.remove_adjacent_smokes(self.current_pos_a, block[1][2])
 
