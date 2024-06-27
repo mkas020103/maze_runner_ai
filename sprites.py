@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+from player import *
 
 class Block:
     """
@@ -18,39 +19,6 @@ class Block:
     def give(self):
         return (self.block, self.block_rect)
     
-class Player:
-    def __init__(self, p_size, starting_places, unexplored_path):
-        self.player_img = pygame.image.load('img/player.png')
-        self.player_img = pygame.transform.scale(self.player_img, (p_size, p_size))
-        self.player_rect = self.player_img.get_rect()
-        self.explored = []
-        self.unexplored = [(pos[1][0], pos[1][1]) for pos, type in unexplored_path] # paths that are unexplored
-        self.can_explore = [(pos[0], pos[1]) for img, pos in starting_places] # paths that the player can currently explore
-
-    def draw(self, win, pos):
-        self.player_rect.x = pos[0]
-        self.player_rect.y = pos[1]
-        win.blit(self.player_img, self.player_rect)
-
-    def check_place(self, current_pos, block_size):
-        # If its not a valid move
-        if current_pos in self.explored:
-            return False
-        if current_pos not in self.can_explore:
-            return False
-
-        # Calculate the adjacent tile
-        adjacent_tile = [(current_pos[0], current_pos[1] - block_size), (current_pos[0] - block_size, current_pos[1]), 
-                         (current_pos[0] + block_size, current_pos[1]), (current_pos[0], current_pos[1] + block_size)]
-        
-        # iterate over each tile, updating the unexplored to its adjacent path 
-        # and adding current tile to the explored path
-        for pos in self.unexplored:
-            if (pos in adjacent_tile) and (pos not in self.can_explore):
-                self.can_explore.append(pos)
-
-        self.explored.append(current_pos)
-        return True
 
 class Maze:
     """
@@ -206,10 +174,10 @@ class Smoke:
         padding_ul = block_size + self.offset
         padding_rd = block_size - self.offset
         adjacent_fogs = [
-            (player_pos[0] + padding_rd, player_pos[1] - block_size + padding_rd),               # Right
-            (player_pos[0] - block_size + padding_rd, player_pos[1] + padding_rd),                    # Down
-            (player_pos[0] + block_size - padding_ul, player_pos[1] - padding_ul),  # Up
-            (player_pos[0] - padding_ul, player_pos[1] + block_size - padding_ul)   # Left
+            (player_pos[0] + padding_rd, player_pos[1] - block_size + padding_rd),     # Right
+            (player_pos[0] - block_size + padding_rd, player_pos[1] + padding_rd),     # Down
+            (player_pos[0] + block_size - padding_ul, player_pos[1] - padding_ul),     # Up
+            (player_pos[0] - padding_ul, player_pos[1] + block_size - padding_ul)      # Left
         ]
         # Update smoke_list, removing adjacent fogs
         self.smoke_list = [unremoved_block for unremoved_block in self.smoke_list if (unremoved_block[1][0],unremoved_block[1][1]) not in adjacent_fogs]
@@ -238,6 +206,11 @@ class mode:
 
         # Player setting
         self.player = Player(self.maze_maam.tile, self.fog_maam.starting_places, self.maze_maam.path_format)
+
+        # agent player setting
+        #self.bfs_agent = BFS_agent(self.maze_a.tile, self.fog_a.starting_places, self.maze_a.path_format)
+        #self.dfs_agent = DFS_agent(self.maze_a.tile, self.fog_a.starting_places, self.maze_a.path_format)
+        self.a_agent = A_agent(self.maze_a.tile, self.fog_a.starting_places, self.maze_a.path_format, self.maze_a.portal_format)
 
     def draw(self, win):
         # Draw maze

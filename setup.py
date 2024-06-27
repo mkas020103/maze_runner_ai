@@ -55,6 +55,7 @@ class Setup:
 
         # Position of the player
         self.current_pos = None
+        self.current_pos_a = None
 
         # Game mode
         self.mode = None
@@ -78,6 +79,9 @@ class Setup:
                 # Draw player if there is a valid position
                 if self.current_pos != None:
                     self.mode.player.draw(self.screen, self.current_pos)
+
+                    # Draw agent position
+                    self.mode.a_agent.draw(self.screen, self.current_pos_a)
 
             elif self.main_page:
                 self.start_button.draw(self.screen, (18, 1, 1), 60)
@@ -123,13 +127,20 @@ class Setup:
                         self.game_page = False
                         self.main_page = True
 
+                    # Check through all pathway
                     for block, type in self.mode.maze_maam.path_format:
                         # block[1][0] = x coord, block[1][1] = y coord, block[1][2] = block_width, block[1][3] = block_height,
                             if pos[0] > block[1][0] and pos[0] < block[1][0] + block[1][2]:
                                 if pos[1] > block[1][1] and pos[1] < block[1][1] + block[1][3]:
                                     if self.mode.player.check_place((block[1][0],block[1][1]), self.mode.maze_maam.path_format[0][0][1][2]):
+                                        # Modify the position of Human Player and Remove adjacent clouds
                                         self.current_pos = (block[1][0],block[1][1])
                                         self.mode.fog_maam.remove_adjacent_smokes(self.current_pos, block[1][2])
+
+                                        # Modify the agent position
+                                        self.current_pos_a = self.mode.a_agent.best_move()
+                                        self.mode.fog_a.remove_adjacent_smokes(self.current_pos_a, block[1][2])
+
                 if event.type == pygame.MOUSEMOTION:
                     if self.quit_button.is_over(pos):
                         self.quit_button.color = (38, 3, 3)
