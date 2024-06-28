@@ -45,6 +45,21 @@ class Player:
         return True
     
 class A_agent():
+    """
+    A* algorithm in finding the shortest path
+
+    variables:
+        self.block_size = block size (int)
+        self.agent = image of the agent <Surface(width x height x depth)>
+        self.agent_rect = the box or rectangle position of the agent (<rect(x pos, y pos, width, height)>)
+        self.current_pos = the updating position on the agent (int)
+        self.portal = np array of one portal [[x y]]
+        self.explored = list of paths that are already explored [(x,y), (x,y)]
+        self.can_explore = list of path that can be still be explored [(x,y), (x,y)]
+        self.start = np array of all starting point [[x y] [x y]]
+        self.is_first = number of moves (int)
+        self.total_cost_dict = dictionary of position with its cost {(x,y):cost, (x,y):cost} 
+    """
     def __init__(self, p_size, starting_place, unexplored_path, portal):
         self.block_size = p_size
         self.agent = pygame.image.load('img/demon.png')
@@ -82,18 +97,14 @@ class A_agent():
                 if tuple(tile) == tuple(self.portal[0]):
                     return tuple(tile)
                 
-            # Add the adjacent tile that can be explored
+            # Add the adjacent tile to the can_explore
             adjacent_paths = [(tuple(adj), self.total_cost_dict[tuple(adj)]) for adj in adjacent_tile if tuple(adj) in self.total_cost_dict]
-            self.can_explore.extend(adjacent_paths)
-            #print('Length of can explore: ',len(self.can_explore))
-            print('can_explored: ',self.can_explore)
-            print('explored: ',self.explored)
-            print('not explored: ',self.total_cost_dict)
+            for path in adjacent_paths:
+                if path not in self.can_explore:
+                    self.can_explore.append(path)
 
             # Find the tuple with the minimum cost
-            minimum_cost_value = min(cost for _, cost in self.can_explore)
-            minimum_cost_path = next(path for path, cost in adjacent_paths if cost == minimum_cost_value)
-            print('value: ',minimum_cost_value,' path: ', minimum_cost_path)
+            minimum_cost_path, minimum_cost_value = min(self.can_explore, key=lambda x: x[1])
             
             # Update the can explore, unexplored and explored part
             del self.total_cost_dict[minimum_cost_path]
