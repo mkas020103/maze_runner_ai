@@ -135,8 +135,18 @@ class DFS_agent(Player):
         super().__init__(p_size, starting_places, unexplored_path)
         # TODO
 
+    def draw(self, win, pos):
+        self.agent_rect.x = pos[0]
+        self.agent_rect.y = pos[1]
+        win.blit(self.agent, self.agent_rect)
+
 class BFS_agent(Player):
     def __init__(self, p_size, starting_places, unexplored_path):
         super().__init__(p_size, starting_places, unexplored_path)
         # TODO
+
+    def draw(self, win, pos):
+        self.agent_rect.x = pos[0]
+        self.agent_rect.y = pos[1]
+        win.blit(self.agent, self.agent_rect)
         
