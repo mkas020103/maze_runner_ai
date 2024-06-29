@@ -62,15 +62,21 @@ class A_agent():
     """
     def __init__(self, p_size, starting_place, unexplored_path, portal):
         self.block_size = p_size
+        # Get image
         self.agent = pygame.image.load('img/demon.png')
         self.agent = pygame.transform.scale(self.agent, (p_size, p_size))
+
+        # Add position 
         self.agent_rect = self.agent.get_rect()
         self.current_pos = None
+
+        # Instantiate end, explored, unexplored, can explore, starting
         self.portal = np.array([(pos[1][0], pos[1][1]) for pos, type in portal])
         self.explored = []
         self.unexplored = np.array([(pos[1][0], pos[1][1]) for pos, type in unexplored_path])
         self.can_explore = []
         self.start = np.array([(pos[0], pos[1]) for img, pos in starting_place])
+        
         self.is_first = 0
         
         # Calculate the Manhattan distance or distance between the goal and each path (h)
@@ -133,7 +139,17 @@ class A_agent():
 class DFS_agent(Player):
     def __init__(self, p_size, starting_places, unexplored_path):
         super().__init__(p_size, starting_places, unexplored_path)
-        # TODO
+        """
+        p_size = block size (int)
+        starting_places = [(image, position)]
+        position = (x coord, y coord, width, height)
+        unexplored_path = [(image, position), (image, position),(image, position)...]
+        """
+        self.explored = []
+
+    def best_move(self):
+        # TODO return position
+        pass
 
     def draw(self, win, pos):
         self.agent_rect.x = pos[0]
@@ -143,7 +159,17 @@ class DFS_agent(Player):
 class BFS_agent(Player):
     def __init__(self, p_size, starting_places, unexplored_path):
         super().__init__(p_size, starting_places, unexplored_path)
-        # TODO
+        """
+        p_size = block size (int)
+        starting_places = [(image, position)]
+        position = (x coord, y coord, width, height)
+        unexplored_path = [(image, position), (image, position),(image, position)...]
+        """
+        self.explored = []
+
+    def best_move(self):
+        # TODO return position
+        pass
 
     def draw(self, win, pos):
         self.agent_rect.x = pos[0]
