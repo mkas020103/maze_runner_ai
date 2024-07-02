@@ -30,6 +30,8 @@ class Setup:
         self.instruction_page = False
         self.game_page = False
         self.difficulty_page = False
+        self.lose_page = False
+        self.win_page = False
 
         # Game background
         self.hell_bg = pygame.image.load('img\hell.jpg')
@@ -39,7 +41,8 @@ class Setup:
         self.b_height = 120
         self.b_width = 220
         self.b_x = (self.screen_width - self.b_width) // 2
-        self.b_color = (79, 6, 6)
+        self.b_color = (92, 64, 51)
+        self.b_color_hover = (46, 32, 26)
 
         # Buttons and placement in screen
         self.start_button = button(x=self.b_x, y=200, width=self.b_width, height=self.b_height, color=self.b_color, name="Escape") # start button
@@ -52,6 +55,11 @@ class Setup:
         self.custom_button = button(x=self.b_x, y=550, width=self.b_width, height=self.b_height, color=self.b_color, name="custom") # custom button
         self.back_m_button = button(x=self.b_x, y=700, width=self.b_width, height=self.b_height, color=self.b_color, name="back") # back to main button
         self.quit_button = button(x=1650, y=15, width=75, height=30, color=self.b_color, name="quit") # quit button
+        self.main_button = button(x=self.b_x, y=500, width=self.b_width, height=self.b_height, color=self.b_color, name="Main") # retry button
+        
+        # Texts
+        self.lost = Font('WA HA HA Bonak', (self.screen_width / 2, 200))
+        self.won = Font('Ano gusto mo congrats?', (self.screen_width / 2, 200))
 
         # Position of the player
         self.current_pos = None
@@ -86,6 +94,8 @@ class Setup:
             elif self.main_page:
                 self.start_button.draw(self.screen, (18, 1, 1), 60)
                 self.instruction_button.draw(self.screen, (18, 1, 1),42)
+                self.current_pos = None
+                self.current_pos_a = None
 
             elif self.instruction_page:
                 self.start_button.draw(self.screen, (18, 1, 1), 60)
@@ -98,6 +108,12 @@ class Setup:
                 self.god_button.draw(self.screen, (18, 1, 1), 60) 
                 self.custom_button.draw(self.screen, (18, 1, 1), 60) 
                 self.back_m_button.draw(self.screen, (18, 1, 1), 60) 
+            elif self.win_page:
+                self.won.draw(self.screen) 
+                self.main_button.draw(self.screen, (18, 1, 1), 60)
+            elif self.lose_page:
+                self.lost.draw(self.screen) 
+                self.main_button.draw(self.screen, (18, 1, 1), 60)
 
             # Handle all events
             self.event_handler()
@@ -141,11 +157,23 @@ class Setup:
                                         self.current_pos_a = self.mode.a_agent.best_move()
                                         self.mode.fog_a.remove_adjacent_smokes(self.current_pos_a, block[1][2])
 
+                    for block, type in self.mode.maze_maam.portal_format:
+                        if pos[0] > block[1][0] and pos[0] < block[1][0] + block[1][2]:
+                                if pos[1] > block[1][1] and pos[1] < block[1][1] + block[1][3]:
+                                    self.win_page = True
+                                    self.game_page = False
+
                 if event.type == pygame.MOUSEMOTION:
                     if self.quit_button.is_over(pos):
-                        self.quit_button.color = (38, 3, 3)
+                        self.quit_button.color = self.b_color_hover
                     else:
                         self.quit_button.color = self.b_color
+
+                # Check if the player already lost
+                for block, type in self.mode.maze_a.portal_format:
+                    if self.current_pos_a == (block[1][0],block[1][1]):
+                        self.game_page = False
+                        self.lose_page = True
 
             # Check the events in the main page
             elif self.main_page:
@@ -163,12 +191,12 @@ class Setup:
                 # If the mouse is hovered over a button
                 if event.type == pygame.MOUSEMOTION:
                     if self.start_button.is_over(pos):
-                        self.start_button.color = (38, 3, 3)
+                        self.start_button.color = self.b_color_hover
                     else:
                         self.start_button.color = self.b_color
 
                     if self.instruction_button.is_over(pos):
-                        self.instruction_button.color = (38, 3, 3)
+                        self.instruction_button.color = self.b_color_hover
                     else:
                         self.instruction_button.color = self.b_color
 
@@ -185,7 +213,7 @@ class Setup:
                     # Set the mode of the game and switch to gamepage
                     if self.easy_button.is_over(pos):
                         font_list = [('BFS', (520,300)), ('DFS', (520,770)), ('A', (1320,770))]
-                        maze_list = [(150, 150,  map.easy), (1450, 600,  map.easy), (1450, 150,  map.easy), (150, 600,  map.easy)]
+                        maze_list = [(150, 150,  map.easy), (1450, 600,  map.easy), (1450, 150,  map.easy), (150, 600,  map.easy)] # UPPER LEFT, LOWER RIGHT, UPPER RIGHT, LOWER LEFT
                         self.mode = mode(font_list, maze_list, 50)
 
                         self.difficulty_page = False
@@ -216,8 +244,8 @@ class Setup:
                         self.game_page = True
                     elif self.custom_button.is_over(pos):
                         font_list = [('BFS', (670,30)), ('DFS', (670,950)), ('A', (1070,950))]
-                        maze_list = [(100, 150, map.custom), (1000, 600,  map.custom), (1000, 150,  map.custom), (100, 600,  map.custom)]
-                        fog, map_size = map.calc_custom()
+                        fog, map_size, pos = map.calc_custom()
+                        maze_list = [(pos[''], pos[''], map.custom), (pos[''], pos[''],  map.custom), (pos[''], pos[''],  map.custom), (pos[''], pos[''],  map.custom)]
                         self.mode = mode(font_list, maze_list, fog, map_size)
 
                         self.difficulty_page = False
@@ -226,32 +254,32 @@ class Setup:
                 # If the mouse is hovered over a button
                 if event.type == pygame.MOUSEMOTION:
                     if self.easy_button.is_over(pos):
-                        self.easy_button.color = (38, 3, 3)
+                        self.easy_button.color = self.b_color_hover
                     else:
                         self.easy_button.color = self.b_color
 
                     if self.medium_button.is_over(pos):
-                        self.medium_button.color = (38, 3, 3)
+                        self.medium_button.color = self.b_color_hover
                     else:
                         self.medium_button.color = self.b_color
             
                     if self.hard_button.is_over(pos):
-                        self.hard_button.color = (38, 3, 3)
+                        self.hard_button.color = self.b_color_hover
                     else:
                         self.hard_button.color = self.b_color
             
                     if self.god_button.is_over(pos):
-                        self.god_button.color = (38, 3, 3)
+                        self.god_button.color = self.b_color_hover
                     else:
                         self.god_button.color = self.b_color
 
                     if self.custom_button.is_over(pos):
-                        self.custom_button.color = (38, 3, 3)
+                        self.custom_button.color = self.b_color_hover
                     else:
                         self.custom_button.color = self.b_color
             
                     if self.back_m_button.is_over(pos):
-                        self.back_m_button.color = (38, 3, 3)
+                        self.back_m_button.color = self.b_color_hover
                     else:
                         self.back_m_button.color = self.b_color
             
@@ -271,11 +299,40 @@ class Setup:
                 # If the mouse is hovered over a button
                 if event.type == pygame.MOUSEMOTION:
                     if self.start_button.is_over(pos):
-                        self.start_button.color = (38, 3, 3)
+                        self.start_button.color = self.b_color_hover
                     else:
                         self.start_button.color = self.b_color
 
                     if self.instruction_button.is_over(pos):
-                        self.instruction_button.color = (38, 3, 3)
+                        self.instruction_button.color = self.b_color_hover
                     else:
                         self.instruction_button.color = self.b_color
+            elif self.lose_page:
+                # If the mouse is click check through all possible pages
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.main_button.is_over(pos):
+                        #print('start button clicked')
+                        self.main_page = True
+                        self.lose_page = False
+
+                # If the mouse is hovered over a button
+                if event.type == pygame.MOUSEMOTION:
+                    if self.main_button.is_over(pos):
+                        self.main_button.color = self.b_color_hover
+                    else:
+                        self.main_button.color = self.b_color
+            elif self.win_page:
+                # If the mouse is click check through all possible pages
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.main_button.is_over(pos):
+                        #print('start button clicked')
+                        self.main_page = True
+                        self.win_page = False
+
+                # If the mouse is hovered over a button
+                if event.type == pygame.MOUSEMOTION:
+                    if self.main_button.is_over(pos):
+                        self.main_button.color = self.b_color_hover
+                    else:
+                        self.main_button.color = self.b_color
+            

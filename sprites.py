@@ -253,7 +253,7 @@ class button:
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.height), 0)
 
         if self.name != '':
-            font = pygame.font.SysFont('mvboli', fsize)
+            font = pygame.font.SysFont('franklingothicmedium', fsize)
             name = font.render(self.name, 1, (0, 0, 0))
             win.blit(name, (self.x + (self.width/2 - name.get_width()/2), self.y + (self.height/2 - name.get_height()/2)))
 
@@ -268,7 +268,7 @@ class button:
 class Font:
     # Render the text
     def __init__(self, text, pos):
-        font = pygame.font.Font(None, 74) 
+        font = pygame.font.SysFont('calibri', 74) 
         self.text_color = (255, 255, 255)
         self.text_surface = font.render(text, True, self.text_color)
 
