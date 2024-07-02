@@ -56,8 +56,6 @@ class Setup:
         # Position of the player
         self.current_pos = None
         self.current_pos_a = None
-        self.current_pos_dfs = None
-        self.current_pos_bfs = None
 
         # Game mode
         self.mode = None
@@ -142,14 +140,6 @@ class Setup:
                                         # Modify the position of the AI and Remove adjacent clouds
                                         self.current_pos_a = self.mode.a_agent.best_move()
                                         self.mode.fog_a.remove_adjacent_smokes(self.current_pos_a, block[1][2])
-
-                                        # Modify the position of the AI and Remove adjacent clouds
-                                        self.current_pos_bfs = self.mode.a_agent.best_move()
-                                        self.mode.fog_a.remove_adjacent_smokes(self.current_pos_bfs, block[1][2])
-
-                                        # Modify the position of the AI and Remove adjacent clouds
-                                        self.current_pos_dfs = self.mode.a_agent.best_move()
-                                        self.mode.fog_a.remove_adjacent_smokes(self.current_pos_dfs, block[1][2])
 
                 if event.type == pygame.MOUSEMOTION:
                     if self.quit_button.is_over(pos):
