@@ -159,8 +159,14 @@ class Setup:
 
                                         # if red power found
                                         if self.current_pos_a == self.mode.red_power_a.pos:
+                                            # change current position of agent to a random place,can be explored or not explored
                                             self.current_pos_a = self.mode.red_power_a.random_add()
+
+                                            # Update fog
                                             self.mode.fog_a.remove_adjacent_smokes(self.current_pos_a, block[1][2])
+                                            self.mode.fog_a.remove_current_smoke(self.current_pos_a, block[1][2])
+
+                                            #
 
                     for block, type in self.mode.maze_maam.portal_format:
                         if pos[0] > block[1][0] and pos[0] < block[1][0] + block[1][2]:

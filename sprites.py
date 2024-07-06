@@ -39,7 +39,7 @@ class Maze:
         self.wall = pygame.image.load('img/concrete.jpg') 
         self.path = pygame.image.load('img/pathway.JPG') 
         self.portal = pygame.image.load('img/portal.JPG') 
-        self.red_power_img = pygame.image.load('img/red.png')
+        self.red_power_img = pygame.image.load('img/redpill.png')
         #self.blue_power_img = pygame.image.load('img/blue.png')
         #self.violet_power_img= pygame.image.load('img/violet.png')
 
@@ -196,8 +196,15 @@ class Smoke:
             (player_pos[0] + block_size - padding_ul, player_pos[1] - padding_ul),     # Up
             (player_pos[0] - padding_ul, player_pos[1] + block_size - padding_ul)      # Left
         ]
+        #print("\nplayer pos: ", player_pos)
+        #print("adjacent fog: ",adjacent_fogs)
         # Update smoke_list, removing adjacent fogs
         self.smoke_list = [unremoved_block for unremoved_block in self.smoke_list if (unremoved_block[1][0],unremoved_block[1][1]) not in adjacent_fogs]
+    
+    def remove_current_smoke(self, player_pos, block_size):
+        padding_rd = block_size - self.offset
+        current_pos = player_pos[0] + padding_rd - block_size, player_pos[1] + padding_rd - block_size
+        self.smoke_list = [unremoved_block for unremoved_block in self.smoke_list if (unremoved_block[1][0],unremoved_block[1][1]) != current_pos]
     
 class mode:
     """
