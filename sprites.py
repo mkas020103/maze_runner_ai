@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 from player import *
+from powerup import *
 
 class Block:
     """
@@ -30,11 +31,17 @@ class Maze:
         self.path_format = []
         self.portal_format = []
         self.positions = []
+        self.red_power = None
+        self.blue_power = None
+        self.violet_power = None
 
         # Load block image
         self.wall = pygame.image.load('img/concrete.jpg') 
         self.path = pygame.image.load('img/pathway.JPG') 
         self.portal = pygame.image.load('img/portal.JPG') 
+        self.red_power_img = pygame.image.load('img/red.png')
+        #self.blue_power_img = pygame.image.load('img/blue.png')
+        #self.violet_power_img= pygame.image.load('img/violet.png')
 
         # Adjust block size
         if custom_size != None:
@@ -60,10 +67,17 @@ class Maze:
                     b = Block(self.wall, self.tile, col_count, row_count, xposition, yposition)
                     self.wall_format.append([b.give(),'w'])
                     self.positions.append([b.give(),'w'])
-                elif block == 7:
+                elif block == 7 or block == 1 or block == 2 or block == 3:
                     b = Block(self.path, self.tile, col_count, row_count, xposition,yposition)
                     self.path_format.append([b.give(),'p'])
                     self.positions.append([b.give(),'p'])
+                    if block == 1:
+                        r = Block(self.red_power_img, self.tile, col_count, row_count, xposition, yposition)
+                        self.red_power = r.give()
+                    elif block == 2:
+                        pass
+                    elif block == 3:
+                        pass
                 elif block == 8:
                     b = Block(self.portal, self.tile, col_count, row_count, xposition, yposition)
                     self.portal_format.append([b.give(),'l'])
@@ -73,6 +87,9 @@ class Maze:
 
     def position(self):
         return self.positions
+
+    def place_power(self):
+        return self.red_power, self.blue_power, self.violet_power
                 
 
     def draw(self, win):
@@ -212,6 +229,11 @@ class mode:
         #self.dfs_agent = DFS_agent(self.maze_a.tile, self.fog_a.starting_places, self.maze_a.path_format)
         self.a_agent = A_agent(self.maze_a.tile, self.fog_a.starting_places, self.maze_a.path_format, self.maze_a.portal_format)
 
+        # power up setting
+        self.red_power_a_img, self.blue_power_a_img, self.violet_power_a_img = self.maze_a.place_power()
+        print(self.red_power_a_img, self.blue_power_a_img, self.violet_power_a_img)
+        self.red_power_a = Red(self.maze_a.path_format, self.red_power_a_img)
+
     def draw(self, win):
         # Draw maze
         self.maze_maam.draw(win)
@@ -229,6 +251,9 @@ class mode:
         self.fog_dfs.draw(win)
         self.fog_a.draw(win)
         self.fog_maam.draw(win)
+
+        # Draw power up
+        self.red_power_a
 
 class button:
     """
