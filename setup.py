@@ -157,6 +157,10 @@ class Setup:
                                         self.current_pos_a = self.mode.a_agent.best_move()
                                         self.mode.fog_a.remove_adjacent_smokes(self.current_pos_a, block[1][2])
 
+                                        # if red power found
+                                        if self.current_pos_a == self.mode.red_power_a.pos:
+                                            self.current_pos_a = self.mode.red_power_a.random_add()
+
                     for block, type in self.mode.maze_maam.portal_format:
                         if pos[0] > block[1][0] and pos[0] < block[1][0] + block[1][2]:
                                 if pos[1] > block[1][1] and pos[1] < block[1][1] + block[1][3]:

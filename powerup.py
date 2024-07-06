@@ -6,11 +6,12 @@ class Red:
 	def __init__(self, all_path, power_up):
 		self.all_path = all_path
 		self.power_up = power_up
+		self.pos = (self.power_up[1][0], self.power_up[1][1])
 	
-	def random(self):
+	def random_add(self):
 		random_path = random.choice(self.all_path)
 		self.all_path.remove(random_path)
-		return random_path
+		return (random_path[0][1][0], random_path[0][1][1])
 		
 	def draw(self, win):
-		win.blit(self.power_img, self.power_rect) #TODO: change parameters
+		win.blit(self.power_up[0], self.power_up[1]) #TODO: change parameters

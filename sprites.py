@@ -231,7 +231,6 @@ class mode:
 
         # power up setting
         self.red_power_a_img, self.blue_power_a_img, self.violet_power_a_img = self.maze_a.place_power()
-        print(self.red_power_a_img, self.blue_power_a_img, self.violet_power_a_img)
         self.red_power_a = Red(self.maze_a.path_format, self.red_power_a_img)
 
     def draw(self, win):
@@ -253,7 +252,7 @@ class mode:
         self.fog_maam.draw(win)
 
         # Draw power up
-        self.red_power_a
+        self.red_power_a.draw(win)
 
 class button:
     """
