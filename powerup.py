@@ -10,7 +10,6 @@ class Red:
 	
 	def random_add(self):
 		random_path = random.choice(self.all_path)
-		self.all_path.remove(random_path)
 		return (random_path[0][1][0], random_path[0][1][1])
 		
 	def draw(self, win):
