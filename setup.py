@@ -158,15 +158,29 @@ class Setup:
                                         self.mode.fog_a.remove_adjacent_smokes(self.current_pos_a, block[1][2])
 
                                         # if red power found
-                                        if self.current_pos_a == self.mode.red_power_a.pos:
-                                            # change current position of agent to a random place,can be explored or not explored
-                                            self.current_pos_a = self.mode.red_power_a.random_add()
+                                        if self.mode.red_power_a_img:
+                                            if self.current_pos_a == self.mode.red_power_a.pos:
+                                                # change current position of agent to a random place,can be explored or not explored
+                                                self.current_pos_a = self.mode.red_power_a.random_add()
 
-                                            # Update fog
-                                            self.mode.fog_a.remove_adjacent_smokes(self.current_pos_a, block[1][2])
-                                            self.mode.fog_a.remove_current_smoke(self.current_pos_a, block[1][2])
+                                                # Update fog
+                                                self.mode.fog_a.remove_adjacent_smokes(self.current_pos_a, block[1][2])
+                                                self.mode.fog_a.remove_current_smoke(self.current_pos_a, block[1][2])
 
-                                            #
+                                                # Update explored, unexplored, and can explroe paths
+                                                self.mode.a_agent.update_path(self.current_pos_a)
+
+                                        if self.mode.red_power_maam_img:
+                                            if self.current_pos == self.mode.red_power_maam.pos:
+                                                # change current position of agent to a random place,can be explored or not explored
+                                                self.current_pos = self.mode.red_power_maam.random_add()
+
+                                                # Update fog
+                                                self.mode.fog_maam.remove_adjacent_smokes(self.current_pos, block[1][2])
+                                                self.mode.fog_maam.remove_current_smoke(self.current_pos, block[1][2])
+
+                                                # Update explored, unexplored, and can explroe paths
+                                                self.mode.player.update_path(self.current_pos, block[1][2])
 
                     for block, type in self.mode.maze_maam.portal_format:
                         if pos[0] > block[1][0] and pos[0] < block[1][0] + block[1][2]:

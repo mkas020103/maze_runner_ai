@@ -236,9 +236,15 @@ class mode:
         #self.dfs_agent = DFS_agent(self.maze_a.tile, self.fog_a.starting_places, self.maze_a.path_format)
         self.a_agent = A_agent(self.maze_a.tile, self.fog_a.starting_places, self.maze_a.path_format, self.maze_a.portal_format)
 
-        # power up setting
+        # red power up setting
         self.red_power_a_img, self.blue_power_a_img, self.violet_power_a_img = self.maze_a.place_power()
-        self.red_power_a = Red(self.maze_a.path_format, self.red_power_a_img)
+        if self.red_power_a_img:
+            self.red_power_a = Red(self.maze_a.path_format, self.red_power_a_img)
+        self.red_power_maam_img, self.blue_power_maam_img, self.violet_power_maam_img = self.maze_maam.place_power()
+        if self.red_power_maam_img:
+            self.red_power_maam = Red(self.maze_maam.path_format, self.red_power_maam_img)
+
+
 
     def draw(self, win):
         # Draw maze
@@ -252,14 +258,17 @@ class mode:
         self.d2.draw(win)
         self.d3.draw(win)
 
+        # Draw power up
+        if self.red_power_a_img:
+            self.red_power_a.draw(win)
+        if self.red_power_maam_img:
+            self.red_power_maam.draw(win)
+
         # Draw fog
         self.fog_bfs.draw(win)
         self.fog_dfs.draw(win)
         self.fog_a.draw(win)
         self.fog_maam.draw(win)
-
-        # Draw power up
-        self.red_power_a.draw(win)
 
 class button:
     """

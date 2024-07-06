@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import numpy as np
+import os
 
 class Player:
     """
@@ -30,6 +31,10 @@ class Player:
         if current_pos not in self.can_explore:
             return False
 
+        self.update_path(current_pos, block_size)
+        return True
+    
+    def update_path(self, current_pos, block_size):
         # Calculate the adjacent tile
         adjacent_tile = [(current_pos[0], current_pos[1] - block_size), (current_pos[0] - block_size, current_pos[1]), 
                          (current_pos[0] + block_size, current_pos[1]), (current_pos[0], current_pos[1] + block_size)]
@@ -42,7 +47,6 @@ class Player:
                 self.can_explore.append(pos)
 
         self.explored.append(current_pos)
-        return True
     
 class A_agent():
     """
@@ -72,6 +76,7 @@ class A_agent():
         self.can_explore = []
         self.start = np.array([(pos[0], pos[1]) for img, pos in starting_place])
         self.is_first = 0
+        self.found_portal = None
         
         # Calculate the Manhattan distance or distance between the goal and each path (h)
         self.manhattan = np.abs(self.unexplored[:, 0] - self.portal[0][0]) + np.abs(self.unexplored[:, 1] - self.portal[0][1])
@@ -84,10 +89,24 @@ class A_agent():
 
         # Dictionary of the unexplored path with its respective value
         self.total_cost_dict = {tuple(path): cost for path, cost in zip(self.unexplored, self.total_cost)}
-
+        
     def best_move(self):
+        os.system("cls || clear")
         self.is_first += 1
         if self.is_first != 1:
+            # Portal already found
+            if self.found_portal:
+                return self.found_portal
+
+            # Find the tuple with the minimum cost in explorable paths
+            minimum_cost_path, minimum_cost_value = min(self.can_explore, key=lambda x: x[1])
+            self.current_pos = minimum_cost_path
+
+            # Remove the current path from can explore, unexplored, and append to explored path
+            del self.total_cost_dict[minimum_cost_path]
+            self.can_explore.remove((minimum_cost_path,minimum_cost_value))
+            self.explored.append(minimum_cost_path)
+
             # Calculate the adjacent tile
             adjacent_tile = np.array([(self.current_pos[0], self.current_pos[1] - self.block_size), (self.current_pos[0] - self.block_size, self.current_pos[1]), 
                          (self.current_pos[0] + self.block_size, self.current_pos[1]), (self.current_pos[0], self.current_pos[1] + self.block_size)])
@@ -95,7 +114,7 @@ class A_agent():
             # If the portal is one of the adjacent tile
             for tile in adjacent_tile:
                 if tuple(tile) == tuple(self.portal[0]):
-                    return tuple(tile)
+                    self.found_portal = tuple(tile)
                 
             # Add the adjacent tile to the can_explore
             adjacent_paths = [(tuple(adj), self.total_cost_dict[tuple(adj)]) for adj in adjacent_tile if tuple(adj) in self.total_cost_dict]
@@ -103,26 +122,49 @@ class A_agent():
                 if path not in self.can_explore:
                     self.can_explore.append(path)
 
-            # Find the tuple with the minimum cost
-            minimum_cost_path, minimum_cost_value = min(self.can_explore, key=lambda x: x[1])
-            
-            # Update the can explore, unexplored and explored part
-            del self.total_cost_dict[minimum_cost_path]
-            self.can_explore.remove((minimum_cost_path,minimum_cost_value))
-            self.explored.append(minimum_cost_path)
-
-            # Update the current path and return it
-            self.current_pos = minimum_cost_path
             return minimum_cost_path
             
         else:
             # Set the starting point
             self.current_pos = self.start[0]
 
+             # Calculate the adjacent tile
+            adjacent_tile = np.array([(self.current_pos[0], self.current_pos[1] - self.block_size), (self.current_pos[0] - self.block_size, self.current_pos[1]), 
+                         (self.current_pos[0] + self.block_size, self.current_pos[1]), (self.current_pos[0], self.current_pos[1] + self.block_size)])
+            
+            # If the portal is one of the adjacent tile
+            for tile in adjacent_tile:
+                if tuple(tile) == tuple(self.portal[0]):
+                    self.found_portal = tuple(tile)
+
+            # Add the adjacent tile to the can_explore
+            adjacent_paths = [(tuple(adj), self.total_cost_dict[tuple(adj)]) for adj in adjacent_tile if tuple(adj) in self.total_cost_dict]
+            for path in adjacent_paths:
+                if path not in self.can_explore:
+                    self.can_explore.append(path)
+
             # Update the unexplored and explored part
             del self.total_cost_dict[tuple(self.start[0])]
             self.explored.append(tuple(self.start[0]))
             return tuple(self.start[0])
+        
+    def update_path(self, current_pos):
+        self.current_pos = current_pos
+
+        # Calculate the adjacent tile
+        adjacent_tile = np.array([(self.current_pos[0], self.current_pos[1] - self.block_size), (self.current_pos[0] - self.block_size, self.current_pos[1]), 
+                        (self.current_pos[0] + self.block_size, self.current_pos[1]), (self.current_pos[0], self.current_pos[1] + self.block_size)])
+        
+        # Add the adjacent tile to the can_explore
+        adjacent_paths = [(tuple(adj), self.total_cost_dict[tuple(adj)]) for adj in adjacent_tile if tuple(adj) in self.total_cost_dict]
+        for path in adjacent_paths:
+            if path not in self.can_explore:
+                self.can_explore.append(path)
+
+        for tile in adjacent_tile:
+            if tuple(tile) == tuple(self.portal[0]):
+                self.found_portal = tuple(tile)
+
         
     def draw(self, win, pos):
         self.agent_rect.x = pos[0]
