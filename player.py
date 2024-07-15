@@ -175,11 +175,65 @@ class A_agent():
 class DFS_agent(Player):
     def __init__(self, p_size, starting_places, unexplored_path):
         super().__init__(p_size, starting_places, unexplored_path)
-        # TODO
+        self.block_size = p_size
+        self.agent = pygame.image.load('img/demon.png')
+        self.agent = pygame.transform.scale(self.agent, (p_size, p_size))
+        self.agent_rect = self.agent.get_rect()
+        self.unexplored = [(pos[1][0], pos[1][1]) for pos, type in unexplored_path]
+        self.start = np.array([(pos[0], pos[1]) for img, pos in starting_places])
+        self.is_first = 0
+        self.explored = []
+        self.can_explore = []
+        self.current_move = None
+
+    def move(self):
+        os.system("cls || clear")
+        self.is_first += 1
+        if self.is_first != 1:
+            # Get the deepest place 
+            self.current_move = self.can_explore[-1] # TODO: BUG TANGA FIX MO
+
+            # Update paths that can be explored
+            self.can_explore.pop()
+
+            # Return the deepest move
+            return self.current_move
+        else:
+            # Set the starting point
+            self.current_pos = self.start[0]
+
+             # Calculate the adjacent tile
+            adjacent_tile = [(self.current_pos[0], self.current_pos[1] - self.block_size), (self.current_pos[0] - self.block_size, self.current_pos[1]), 
+                         (self.current_pos[0] + self.block_size, self.current_pos[1]), (self.current_pos[0], self.current_pos[1] + self.block_size)]
+
+            # Add the adjacent tile to the can_explore
+            adjacent_paths = [adj for adj in adjacent_tile if adj in self.unexplored]
+            for path in adjacent_paths:
+                if path not in self.can_explore:
+                    self.can_explore.append(path)
+
+            # Update the unexplored and explored part
+            self.unexplored.remove(tuple(self.start[0]))
+            self.explored.append(tuple(self.start[0]))
+            return tuple(self.start[0])
+    
+    def update_path(self, current_pos):
+        self.current_pos = current_pos
+
+        # Calculate the adjacent tile
+        adjacent_tile = [(self.current_pos[0], self.current_pos[1] - self.block_size), (self.current_pos[0] - self.block_size, self.current_pos[1]), 
+                        (self.current_pos[0] + self.block_size, self.current_pos[1]), (self.current_pos[0], self.current_pos[1] + self.block_size)]
+        
+        # Add the adjacent tile to the can_explore
+        adjacent_paths = [adj for adj in adjacent_tile if adj in self.unexplored]
+        for path in adjacent_paths:
+            if path not in self.can_explore:
+                self.can_explore.append(path)
 
     def draw(self, win, pos):
         self.agent_rect.x = pos[0]
         self.agent_rect.y = pos[1]
+        print("drawn")
         win.blit(self.agent, self.agent_rect)
 
 class BFS_agent(Player):
