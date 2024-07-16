@@ -230,7 +230,7 @@ class mode:
         self.player = Player(self.maze_maam.tile, self.fog_maam.starting_places, self.maze_maam.path_format)
 
         # agent player setting
-        #self.bfs_agent = BFS_agent(self.maze_a.tile, self.fog_a.starting_places, self.maze_a.path_format)
+        self.bfs_agent = BFS_agent(self.maze_bfs.tile, self.fog_bfs.starting_places, self.maze_bfs.path_format, self.maze_bfs.portal_format)
         self.dfs_agent = DFS_agent(self.maze_dfs.tile, self.fog_dfs.starting_places, self.maze_dfs.path_format, self.maze_dfs.portal_format)
         self.a_agent = A_agent(self.maze_a.tile, self.fog_a.starting_places, self.maze_a.path_format, self.maze_a.portal_format)
 
@@ -238,6 +238,7 @@ class mode:
         self.red_power_a_img, self.blue_power_a_img, self.violet_power_a_img = self.maze_a.place_power()
         self.red_power_maam_img, self.blue_power_maam_img, self.violet_power_maam_img = self.maze_maam.place_power()
         self.red_power_dfs_img, self.blue_power_dfs_img, self.violet_power_dfs_img = self.maze_dfs.place_power()
+        self.red_power_bfs_img, self.blue_power_bfs_img, self.violet_power_bfs_img = self.maze_bfs.place_power()
 
         # red power up setting
         if self.red_power_a_img:
@@ -246,6 +247,8 @@ class mode:
             self.red_power_maam = Red(self.maze_maam.path_format, self.red_power_maam_img)
         if self.red_power_dfs_img:
             self.red_power_dfs = Red(self.maze_dfs.path_format, self.red_power_dfs_img)
+        if self.red_power_bfs_img:
+            self.red_power_bfs = Red(self.maze_bfs.path_format, self.red_power_bfs_img)
 
 
 
@@ -269,6 +272,8 @@ class mode:
             self.red_power_maam.draw(win)
         if self.red_power_dfs_img:
             self.red_power_dfs.draw(win)
+        if self.red_power_bfs_img:
+            self.red_power_bfs.draw(win)
 
         # Draw fog
         self.fog_bfs.draw(win)

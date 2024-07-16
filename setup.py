@@ -96,6 +96,7 @@ class Setup:
                     # Draw agent position
                     self.mode.a_agent.draw(self.screen, self.current_pos_a) # a agent
                     self.mode.dfs_agent.draw(self.screen, self.current_pos_dfs) # dfs agent
+                    self.mode.bfs_agent.draw(self.screen, self.current_pos_bfs) # bfs agent
 
             elif self.main_page:
                 self.start_button.draw(self.screen, (18, 1, 1), 60)
@@ -190,6 +191,11 @@ class Setup:
                         self.game_page = False
                         self.lose_page = True
 
+                for block, type in self.mode.maze_bfs.portal_format: # maze DFS
+                    if self.current_pos_bfs == (block[1][0],block[1][1]):
+                        self.game_page = False
+                        self.lose_page = True
+
             # Check the events in the main page
             elif self.main_page:
                 # If the mouse is click check through all possible pages
@@ -224,7 +230,7 @@ class Setup:
 
                     # Set the mode of the game and switch to gamepage
                     if self.easy_button.is_over(pos):
-                        font_list = [('BFS', (520,300)), ('DFS', (520,770)), ('A', (1320,770))]
+                        font_list = [('BFS', (520,300)), ('A', (520,770)), ('DFS', (1320,770))]
                         maze_list = [(150, 150,  map.easy), (1450, 600,  map.easy), (1450, 150,  map.easy), (150, 600,  map.easy)] # UPPER LEFT, LOWER RIGHT, UPPER RIGHT, LOWER LEFT
                         self.mode = mode(font_list, maze_list, 50)
 
@@ -232,7 +238,7 @@ class Setup:
                         self.game_page = True
 
                     elif self.medium_button.is_over(pos):
-                        font_list = [('BFS', (720,250)), ('DFS', (720,770)), ('A', (1070,770))]
+                        font_list = [('BFS', (720,250)), ('A', (720,770)), ('DFS', (1070,770))]
                         maze_list = [(150, 50, map.medium), (1200, 550,  map.medium), (1200, 50,  map.medium), (150, 550,  map.medium)]
                         self.mode = mode(font_list, maze_list, 48)
 
@@ -240,7 +246,7 @@ class Setup:
                         self.game_page = True
 
                     elif self.hard_button.is_over(pos):
-                        font_list = [('BFS', (720,250)), ('DFS', (720,770)), ('A', (1085,770))]
+                        font_list = [('BFS', (720,250)), ('A', (720,770)), ('DFS', (1085,770))]
                         maze_list = [(150, 50, map.hard), (1200, 500,  map.hard), (1200, 50,  map.hard), (150, 500,  map.hard)]
                         self.mode = mode(font_list, maze_list,34)
 
@@ -248,14 +254,14 @@ class Setup:
                         self.game_page = True
 
                     elif self.god_button.is_over(pos):
-                        font_list = [('BFS', (670,250)), ('DFS', (670,755)), ('A', (1100,755))]
+                        font_list = [('BFS', (670,250)), ('A', (670,755)), ('DFS', (1100,755))]
                         maze_list = [(125, 20, map.god), (1200, 500,  map.god), (1200, 20,  map.god), (125, 500,  map.god)]
                         self.mode = mode(font_list, maze_list, 20)
 
                         self.difficulty_page = False
                         self.game_page = True
                     elif self.custom_button.is_over(pos):
-                        font_list = [('BFS', (670,30)), ('DFS', (670,950)), ('A', (1070,950))]
+                        font_list = [('BFS', (670,30)), ('A', (670,950)), ('DFS', (1070,950))]
                         fog, map_size, pos = map.calc_custom()
                         maze_list = [(pos[''], pos[''], map.custom), (pos[''], pos[''],  map.custom), (pos[''], pos[''],  map.custom), (pos[''], pos[''],  map.custom)]
                         self.mode = mode(font_list, maze_list, fog, map_size)
@@ -355,6 +361,9 @@ class Setup:
 
         self.current_pos_dfs = self.mode.dfs_agent.move() # dfs agent modified
         self.mode.fog_dfs.remove_adjacent_smokes(self.current_pos_dfs, block[1][2])
+
+        self.current_pos_bfs = self.mode.bfs_agent.move() # bfs agent modified
+        self.mode.fog_bfs.remove_adjacent_smokes(self.current_pos_bfs, block[1][2])
     
     def red_power(self, block):
         if self.mode.red_power_a_img: # A agent
@@ -379,7 +388,19 @@ class Setup:
                 self.mode.fog_dfs.remove_current_smoke(self.current_pos_dfs, block[1][2])
 
                 # Update explored, unexplored, and can explroe paths
-                self.mode.dfs_agent.update_path(self.current_pos_dfs)        
+                self.mode.dfs_agent.update_path(self.current_pos_dfs)
+
+        if self.mode.red_power_bfs_img: # Dfs agent
+            if self.current_pos_bfs == self.mode.red_power_bfs.pos:
+                # change current position of agent to a random place,can be explored or not explored
+                self.current_pos_bfs = self.mode.red_power_bfs.random_add()
+
+                # Update fog
+                self.mode.fog_bfs.remove_adjacent_smokes(self.current_pos_bfs, block[1][2])
+                self.mode.fog_bfs.remove_current_smoke(self.current_pos_bfs, block[1][2])
+
+                # Update explored, unexplored, and can explroe paths
+                self.mode.bfs_agent.update_path(self.current_pos_bfs)    
 
         if self.mode.red_power_maam_img: # Player
             if self.current_pos == self.mode.red_power_maam.pos:
