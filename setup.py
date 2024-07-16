@@ -165,8 +165,10 @@ class Setup:
                                         self.red_power(block)
 
                                         # if blue power found
+                                        self.blue_power(block)
 
                                         # if violet power found
+                                        self.violet_power(block)
 
                     for block, type in self.mode.maze_maam.portal_format:
                         if pos[0] > block[1][0] and pos[0] < block[1][0] + block[1][2]:
@@ -413,4 +415,67 @@ class Setup:
 
                 # Update explored, unexplored, and can explroe paths
                 self.mode.player.update_path(self.current_pos, block[1][2])
+
+    def blue_power(self, block):
+        if self.mode.red_power_a_img: # A agent
+            if self.current_pos_a == self.mode.red_power_a.pos:
+                # change current position of agent to a random place,can be explored or not explored
+                self.current_pos_a = self.mode.red_power_a.random_add()
+
+                # Update fog
+                self.mode.fog_a.remove_adjacent_smokes(self.current_pos_a, block[1][2])
+                self.mode.fog_a.remove_current_smoke(self.current_pos_a, block[1][2])
+
+                # Update explored, unexplored, and can explore paths
+                self.mode.a_agent.update_path(self.current_pos_a)
+
+        if self.mode.red_power_dfs_img: # Dfs agent
+            if self.current_pos_dfs == self.mode.red_power_dfs.pos:
+                # change current position of agent to a random place,can be explored or not explored
+                self.current_pos_dfs = self.mode.red_power_dfs.random_add()
+
+                # Update fog
+                self.mode.fog_dfs.remove_adjacent_smokes(self.current_pos_dfs, block[1][2])
+                self.mode.fog_dfs.remove_current_smoke(self.current_pos_dfs, block[1][2])
+
+                # Update explored, unexplored, and can explroe paths
+                self.mode.dfs_agent.update_path(self.current_pos_dfs)
+
+        if self.mode.red_power_bfs_img: # Dfs agent
+            if self.current_pos_bfs == self.mode.red_power_bfs.pos:
+                # change current position of agent to a random place,can be explored or not explored
+                self.current_pos_bfs = self.mode.red_power_bfs.random_add()
+
+                # Update fog
+                self.mode.fog_bfs.remove_adjacent_smokes(self.current_pos_bfs, block[1][2])
+                self.mode.fog_bfs.remove_current_smoke(self.current_pos_bfs, block[1][2])
+
+                # Update explored, unexplored, and can explroe paths
+                self.mode.bfs_agent.update_path(self.current_pos_bfs)    
+
+        if self.mode.red_power_maam_img: # Player
+            if self.current_pos == self.mode.red_power_maam.pos:
+                # change current position of agent to a random place,can be explored or not explored
+                self.current_pos = self.mode.red_power_maam.random_add()
+
+                # Update fog
+                self.mode.fog_maam.remove_adjacent_smokes(self.current_pos, block[1][2])
+                self.mode.fog_maam.remove_current_smoke(self.current_pos, block[1][2])
+
+    def violet_power(self, block):
+        if self.mode.red_power_a_img: # A agent
+            if self.current_pos_a == self.mode.red_power_a.pos:
+                pass
+
+        if self.mode.red_power_dfs_img: # Dfs agent
+            if self.current_pos_dfs == self.mode.red_power_dfs.pos:
+                pass
+
+        if self.mode.red_power_bfs_img: # Dfs agent
+            if self.current_pos_bfs == self.mode.red_power_bfs.pos:
+               pass  
+
+        if self.mode.red_power_maam_img: # Player
+            if self.current_pos == self.mode.red_power_maam.pos:
+                pass
             

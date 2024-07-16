@@ -75,9 +75,11 @@ class Maze:
                         r = Block(self.red_power_img, self.tile, col_count, row_count, xposition, yposition)
                         self.red_power = r.give()
                     elif block == 2:
-                        pass
+                        bl = Block(self.blue_power_img, self.tile, col_count, row_count, xposition, yposition)
+                        self.blue_power = bl.give()
                     elif block == 3:
-                        pass
+                        v = Block(self.violet_power_img, self.tile, col_count, row_count, xposition, yposition)
+                        self.violet_power = v.give()
                 elif block == 8:
                     b = Block(self.portal, self.tile, col_count, row_count, xposition, yposition)
                     self.portal_format.append([b.give(),'l'])
@@ -250,6 +252,26 @@ class mode:
         if self.red_power_bfs_img:
             self.red_power_bfs = Red(self.maze_bfs.path_format, self.red_power_bfs_img)
 
+        # blue power up setting
+        if self.blue_power_a_img:
+            self.blue_power_a = Blue(self.maze_a.path_format, self.blue_power_a_img)
+        if self.blue_power_maam_img:
+            self.blue_power_maam = Blue(self.maze_maam.path_format, self.blue_power_maam_img)
+        if self.blue_power_dfs_img:
+            self.blue_power_dfs = Blue(self.maze_dfs.path_format, self.blue_power_dfs_img)
+        if self.blue_power_bfs_img:
+            self.blue_power_bfs = Blue(self.maze_bfs.path_format, self.blue_power_bfs_img)
+
+        # violet power up setting
+        if self.violet_power_a_img:
+            self.violet_power_a = Violet(self.maze_a.path_format, self.violet_power_a_img)
+        if self.violet_power_maam_img:
+            self.violet_power_maam = Violet(self.maze_maam.path_format, self.violet_power_maam_img)
+        if self.violet_power_dfs_img:
+            self.violet_power_dfs = Violet(self.maze_dfs.path_format, self.violet_power_dfs_img)
+        if self.violet_power_bfs_img:
+            self.violet_power_bfs = Violet(self.maze_bfs.path_format, self.violet_power_bfs_img)
+
 
 
     def draw(self, win):
@@ -274,6 +296,26 @@ class mode:
             self.red_power_dfs.draw(win)
         if self.red_power_bfs_img:
             self.red_power_bfs.draw(win)
+
+        # Blue
+        if self.blue_power_a_img:
+            self.blue_power_a.draw(win)
+        if self.blue_power_maam_img:
+            self.blue_power_maam.draw(win)
+        if self.blue_power_dfs_img:
+            self.blue_power_dfs.draw(win)
+        if self.blue_power_bfs_img:
+            self.blue_power_bfs.draw(win)
+
+        # Violet
+        if self.violet_power_a_img:
+            self.violet_power_a.draw(win)
+        if self.violet_power_maam_img:
+            self.violet_power_maam.draw(win)
+        if self.violet_power_dfs_img:
+            self.violet_power_dfs.draw(win)
+        if self.violet_power_bfs_img:
+            self.violet_power_bfs.draw(win)
 
         # Draw fog
         self.fog_bfs.draw(win)

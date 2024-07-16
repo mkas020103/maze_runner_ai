@@ -321,7 +321,7 @@ class BFS_agent(Player):
                 return self.portal
             # Get the breath place 
             self.current_pos = self.can_explore[0]
-
+            
             # Remove the current move in the explorable
             self.can_explore.pop(0)
 
@@ -332,7 +332,7 @@ class BFS_agent(Player):
             # Update the explorable and unexplored path
             adjacent_paths = [adj for adj in adjacent_tile if adj in self.unexplored]
             for path in adjacent_paths:
-                if path not in self.can_explore:
+                if path not in self.can_explore and path in self.unexplored:
                     self.can_explore.append(path)
 
             self.unexplored = [path for path in self.unexplored if path not in adjacent_paths]

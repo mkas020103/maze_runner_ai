@@ -15,6 +15,19 @@ class Red:
 	def draw(self, win):
 		win.blit(self.power_up[0], self.power_up[1])
 
+
+class Blue:
+	def __init__(self, all_path, power_up):
+		self.all_path = all_path
+		self.power_up = power_up
+		self.pos = (self.power_up[1][0], self.power_up[1][1])
+
+	def move_closer(self):
+		pass
+
+	def draw(self, win):
+		win.blit(self.power_up[0], self.power_up[1])
+
 class Violet:
 	def __init__(self, all_path, power_up):
 		self.all_path = all_path
@@ -27,12 +40,5 @@ class Violet:
 	def ai_power(self):
 		pass
 
-
-class Blue:
-	def __init__(self, all_path, power_up):
-		self.all_path = all_path
-		self.power_up = power_up
-		self.pos = (self.power_up[1][0], self.power_up[1][1])
-
-	def move_closer(self):
-		pass
+	def draw(self, win):
+		win.blit(self.power_up[0], self.power_up[1])
