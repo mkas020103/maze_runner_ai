@@ -2,12 +2,15 @@ import pygame
 from pygame.locals import *
 import map
 from sprites import *
+import os
 
 class Setup:
     """
     Starts the game according to specified setup.
     """
     def __init__(self):
+        os.system("cls || clear")
+        print('\ngame start:')
         pygame.init()
         
         # Game screen size
@@ -65,6 +68,7 @@ class Setup:
         self.current_pos = None
         self.current_pos_a = None
         self.current_pos_dfs = None
+        self.current_pos_bfs = None
 
         # Game mode
         self.mode = None
@@ -96,8 +100,12 @@ class Setup:
             elif self.main_page:
                 self.start_button.draw(self.screen, (18, 1, 1), 60)
                 self.instruction_button.draw(self.screen, (18, 1, 1),42)
+
+                # Revert all the position to none
                 self.current_pos = None
                 self.current_pos_a = None
+                self.current_pos_dfs = None
+                self.current_pos_bfs = None
 
             elif self.instruction_page:
                 self.start_button.draw(self.screen, (18, 1, 1), 60)
@@ -140,7 +148,6 @@ class Setup:
             if self.game_page:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.quit_button.is_over(pos):
-                        #print('quit button clicked')
                         self.current_pos = None
                         self.game_page = False
                         self.main_page = True
@@ -151,7 +158,6 @@ class Setup:
                             if pos[0] > block[1][0] and pos[0] < block[1][0] + block[1][2]:
                                 if pos[1] > block[1][1] and pos[1] < block[1][1] + block[1][3]:
                                     if self.mode.player.check_place((block[1][0],block[1][1]), self.mode.maze_maam.path_format[0][0][1][2]):
-                                        # Update all maps and position
                                         self.update_move_and_map(block)
 
                                         # if red power found
@@ -174,8 +180,13 @@ class Setup:
                         self.quit_button.color = self.b_color
 
                 # Check if the player already lost
-                for block, type in self.mode.maze_a.portal_format:
+                for block, type in self.mode.maze_a.portal_format: # maze A
                     if self.current_pos_a == (block[1][0],block[1][1]):
+                        self.game_page = False
+                        self.lose_page = True
+                
+                for block, type in self.mode.maze_dfs.portal_format: # maze DFS
+                    if self.current_pos_dfs == (block[1][0],block[1][1]):
                         self.game_page = False
                         self.lose_page = True
 
@@ -184,11 +195,9 @@ class Setup:
                 # If the mouse is click check through all possible pages
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.start_button.is_over(pos):
-                        #print('start button clicked')
                         self.main_page = False
                         self.difficulty_page = True
                     if self.instruction_button.is_over(pos):
-                        #print('instruction button clicked')
                         self.main_page = False
                         self.instruction_page = True
 
@@ -210,7 +219,6 @@ class Setup:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # Go back to main page
                     if self.back_m_button.is_over(pos):
-                        #print('back button clicked')
                         self.difficulty_page = False
                         self.main_page = True
 
@@ -292,11 +300,9 @@ class Setup:
                 # If the mouse is click check through all possible pages
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.start_button.is_over(pos):
-                        #print('start button clicked')
                         self.instruction_page = False
                         self.difficulty_page = True
                     if self.back_button.is_over(pos):
-                        #print('back button clicked')
                         self.instruction_page = False
                         self.main_page = True
 
@@ -315,7 +321,6 @@ class Setup:
                 # If the mouse is click check through all possible pages
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.main_button.is_over(pos):
-                        #print('start button clicked')
                         self.main_page = True
                         self.lose_page = False
 
@@ -329,7 +334,6 @@ class Setup:
                 # If the mouse is click check through all possible pages
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.main_button.is_over(pos):
-                        #print('start button clicked')
                         self.main_page = True
                         self.win_page = False
 
@@ -362,7 +366,7 @@ class Setup:
                 self.mode.fog_a.remove_adjacent_smokes(self.current_pos_a, block[1][2])
                 self.mode.fog_a.remove_current_smoke(self.current_pos_a, block[1][2])
 
-                # Update explored, unexplored, and can explroe paths
+                # Update explored, unexplored, and can explore paths
                 self.mode.a_agent.update_path(self.current_pos_a)
 
         if self.mode.red_power_dfs_img: # Dfs agent

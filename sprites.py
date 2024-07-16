@@ -231,7 +231,7 @@ class mode:
 
         # agent player setting
         #self.bfs_agent = BFS_agent(self.maze_a.tile, self.fog_a.starting_places, self.maze_a.path_format)
-        self.dfs_agent = DFS_agent(self.maze_dfs.tile, self.fog_dfs.starting_places, self.maze_dfs.path_format)
+        self.dfs_agent = DFS_agent(self.maze_dfs.tile, self.fog_dfs.starting_places, self.maze_dfs.path_format, self.maze_dfs.portal_format)
         self.a_agent = A_agent(self.maze_a.tile, self.fog_a.starting_places, self.maze_a.path_format, self.maze_a.portal_format)
 
         # power setting
@@ -262,10 +262,13 @@ class mode:
         self.d3.draw(win)
 
         # Draw power up
+        # Red
         if self.red_power_a_img:
             self.red_power_a.draw(win)
         if self.red_power_maam_img:
             self.red_power_maam.draw(win)
+        if self.red_power_dfs_img:
+            self.red_power_dfs.draw(win)
 
         # Draw fog
         self.fog_bfs.draw(win)

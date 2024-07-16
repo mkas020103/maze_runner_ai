@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 import numpy as np
-import os
+
 
 class Player:
     """
@@ -10,7 +10,9 @@ class Player:
     init:
         self.player_img = a pygame image value
         self.player_rec = a rectangle shape 
-
+        self.explored = list of all explored paths [(x,y) ,(x,y), ...]
+        self.unexplored = list of all unexplored paths [(x,y) ,(x,y), ...]
+        self.can_explore = list of all exploreable paths [(x,y) ,(x,y), ...]
     """
     def __init__(self, p_size, starting_places, unexplored_path):
         self.player_img = pygame.image.load('img/player.png')
@@ -91,7 +93,6 @@ class A_agent():
         self.total_cost_dict = {tuple(path): cost for path, cost in zip(self.unexplored, self.total_cost)}
         
     def best_move(self):
-        os.system("cls || clear")
         self.is_first += 1
         if self.is_first != 1:
             # Portal already found
@@ -173,7 +174,22 @@ class A_agent():
 
 
 class DFS_agent(Player):
-    def __init__(self, p_size, starting_places, unexplored_path):
+    """
+    DFS algorithm in finding the shortest path
+
+    variables:
+        self.block_size = block size (int)
+        self.agent = image of the agent <Surface(width x height x depth)>
+        self.agent_rect = the box or rectangle position of the agent (<rect(x pos, y pos, width, height)>)
+        self.current_pos = the updating position on the agent (int)
+        self.portal = tuple containing the x and y coords of the portal
+        self.explored = list of paths that are already explored [(x,y), (x,y)]
+        self.can_explore = list of path that can be still be explored [(x,y), (x,y)]
+        self.start = np array of all starting point [[x y] [x y]]
+        self.is_first = number of moves (int)
+        self.found_portal = variable in determining whether the portal is already found 
+    """
+    def __init__(self, p_size, starting_places, unexplored_path, portal):
         super().__init__(p_size, starting_places, unexplored_path)
         self.block_size = p_size
         self.agent = pygame.image.load('img/demon.png')
@@ -181,28 +197,46 @@ class DFS_agent(Player):
         self.agent_rect = self.agent.get_rect()
         self.unexplored = [(pos[1][0], pos[1][1]) for pos, type in unexplored_path]
         self.start = np.array([(pos[0], pos[1]) for img, pos in starting_places])
+        self.portal = (portal[0][0][1][0], portal[0][0][1][1])
         self.is_first = 0
         self.explored = []
         self.can_explore = []
-        self.current_move = None
+        self.current_pos = None
+        self.found_portal = False
 
     def move(self):
-        os.system("cls || clear")
         self.is_first += 1
         if self.is_first != 1:
+            if self.found_portal:
+                return self.portal
             # Get the deepest place 
-            self.current_move = self.can_explore[-1] # TODO: BUG TANGA FIX MO
+            self.current_pos = self.can_explore[-1]
 
-            # Update paths that can be explored
+            # Remove the current move in the explorable
             self.can_explore.pop()
 
+            # Calculate the adjacent tile
+            adjacent_tile = [(self.current_pos[0], self.current_pos[1] - self.block_size), (self.current_pos[0] - self.block_size, self.current_pos[1]), 
+                         (self.current_pos[0] + self.block_size, self.current_pos[1]), (self.current_pos[0], self.current_pos[1] + self.block_size)]
+
+            # Update the explorable and unexplored path
+            adjacent_paths = [adj for adj in adjacent_tile if adj in self.unexplored]
+            for path in adjacent_paths:
+                if path not in self.can_explore:
+                    self.can_explore.append(path)
+
+            self.unexplored = [path for path in self.unexplored if path not in adjacent_paths]
+
+            # If portal already found just return the portal
+            if self.portal in adjacent_tile:
+                self.found_portal = True
+
             # Return the deepest move
-            return self.current_move
+            return self.current_pos
         else:
             # Set the starting point
             self.current_pos = self.start[0]
-
-             # Calculate the adjacent tile
+            # Calculate the adjacent tile
             adjacent_tile = [(self.current_pos[0], self.current_pos[1] - self.block_size), (self.current_pos[0] - self.block_size, self.current_pos[1]), 
                          (self.current_pos[0] + self.block_size, self.current_pos[1]), (self.current_pos[0], self.current_pos[1] + self.block_size)]
 
@@ -215,6 +249,11 @@ class DFS_agent(Player):
             # Update the unexplored and explored part
             self.unexplored.remove(tuple(self.start[0]))
             self.explored.append(tuple(self.start[0]))
+
+            # If portal already found just return the portal
+            if self.portal in adjacent_tile:
+                self.found_portal = True
+
             return tuple(self.start[0])
     
     def update_path(self, current_pos):
@@ -223,17 +262,24 @@ class DFS_agent(Player):
         # Calculate the adjacent tile
         adjacent_tile = [(self.current_pos[0], self.current_pos[1] - self.block_size), (self.current_pos[0] - self.block_size, self.current_pos[1]), 
                         (self.current_pos[0] + self.block_size, self.current_pos[1]), (self.current_pos[0], self.current_pos[1] + self.block_size)]
-        
+
         # Add the adjacent tile to the can_explore
         adjacent_paths = [adj for adj in adjacent_tile if adj in self.unexplored]
         for path in adjacent_paths:
             if path not in self.can_explore:
                 self.can_explore.append(path)
 
+        # If portal already found just return the portal
+        if self.portal in adjacent_tile:
+            self.found_portal = True
+        
+        # If the current position is still not already explored remove it from the list
+        if self.current_pos in self.unexplored:
+            self.unexplored.remove(self.current_pos)
+
     def draw(self, win, pos):
         self.agent_rect.x = pos[0]
         self.agent_rect.y = pos[1]
-        print("drawn")
         win.blit(self.agent, self.agent_rect)
 
 class BFS_agent(Player):
