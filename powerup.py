@@ -31,7 +31,7 @@ class Blue:
 	def move_closer(self, explorable):
 		# Get the paths that are explorable only
 		current_paths = [x for x in explorable if x in self.manhattan_dict]
-
+		
 		# Return the explorable point with the smallest manhattan value
 		best_path = min(current_paths, key=lambda x: self.manhattan_dict[x])
 
