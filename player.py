@@ -15,7 +15,8 @@ class Player:
         self.unexplored = list of all unexplored paths [(x,y) ,(x,y), ...]
         self.can_explore = list of all exploreable paths [(x,y) ,(x,y), ...]
     """
-    def __init__(self, p_size, starting_places, unexplored_path):
+    def __init__(self, p_size, starting_places, unexplored_path, portal):
+        self.portal = (portal[0][0][1][0], portal[0][0][1][1])
         self.player_img = pygame.image.load('img/player.png')
         self.player_img = pygame.transform.scale(self.player_img, (p_size, p_size))
         self.player_rect = self.player_img.get_rect()
@@ -74,6 +75,7 @@ class A_agent():
         self.agent_rect = self.agent.get_rect()
         self.current_pos = None
         self.portal = np.array([(pos[1][0], pos[1][1]) for pos, type in portal])
+        self.for_blue_portal = portal
         self.explored = []
         self.unexplored = np.array([(pos[1][0], pos[1][1]) for pos, type in unexplored_path])
         self.can_explore = []
@@ -83,6 +85,8 @@ class A_agent():
         
         # Calculate the Manhattan distance or distance between the goal and each path (h)
         self.manhattan = np.abs(self.unexplored[:, 0] - self.portal[0][0]) + np.abs(self.unexplored[:, 1] - self.portal[0][1])
+
+        self.manhattan_dict = {tuple(path): cost for path, cost in zip(self.unexplored, self.manhattan)}
         
         # Calculate the cost of each tile from the starting point (g)
         self.cost = np.abs(self.unexplored[:, 0] - self.start[0][0]) + np.abs(self.unexplored[:, 1] - self.start[0][1])
@@ -191,7 +195,7 @@ class DFS_agent(Player):
         self.found_portal = variable in determining whether the portal is already found 
     """
     def __init__(self, p_size, starting_places, unexplored_path, portal):
-        super().__init__(p_size, starting_places, unexplored_path)
+        super().__init__(p_size, starting_places, unexplored_path, portal)
         self.block_size = p_size
         self.agent = pygame.image.load('img/demon.png')
         self.agent = pygame.transform.scale(self.agent, (p_size, p_size))
@@ -300,7 +304,7 @@ class BFS_agent(Player):
         self.found_portal = variable in determining whether the portal is already found 
     """
     def __init__(self, p_size, starting_places, unexplored_path, portal):
-        super().__init__(p_size, starting_places, unexplored_path)
+        super().__init__(p_size, starting_places, unexplored_path, portal)
         self.block_size = p_size
         self.agent = pygame.image.load('img/demon.png')
         self.agent = pygame.transform.scale(self.agent, (p_size, p_size))

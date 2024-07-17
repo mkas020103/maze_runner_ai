@@ -17,8 +17,8 @@ class Setup:
         self.screen_width, self.screen_height = pyautogui.size()
 
         # Adjustment on screen size
-        self.screen_width = int(self.screen_width * 0.7)
-        self.screen_height = int(self.screen_height * 0.7)
+        self.screen_width = int(self.screen_width * 0.9)
+        self.screen_height = int(self.screen_height * 0.9)
 
         # Number of FPS
         self.clock = pygame.time.Clock()
@@ -75,8 +75,6 @@ class Setup:
         self.quadrant3_end = (self.screen_width // 2 - 1, self.screen_height - 1)  # End of lower left
         self.quadrant4_end = (self.screen_width - 1, self.screen_height - 1)  # End of lower right
         
-        print(self.quadrant1,self.quadrant2,self.quadrant3,self.quadrant4)
-        print(self.quadrant1_end,self.quadrant2_end,self.quadrant3_end,self.quadrant4_end)
 
         # Button positions and colors
         self.b_x_center = self.center_x
@@ -120,7 +118,9 @@ class Setup:
         self.pos = []
 
         # Print Debugging
-        print('screen size: ',self.screen_width, self.screen_height)
+        #print(self.quadrant1,self.quadrant2,self.quadrant3,self.quadrant4)
+        #print(self.quadrant1_end,self.quadrant2_end,self.quadrant3_end,self.quadrant4_end)
+        #print('screen size: ',self.screen_width, self.screen_height)
 
     def run(self):
         while self.running:
@@ -498,36 +498,36 @@ class Setup:
                 self.mode.player.update_path(self.current_pos, block[1][2])
 
     def blue_power(self, block):
-        if self.mode.red_power_a_img: # A agent
-            if self.current_pos_a == self.mode.red_power_a.pos:
+        if self.mode.blue_power_a_img: # A agent
+            if self.current_pos_a == self.mode.blue_power_a.pos:
                 pass
 
-        if self.mode.red_power_dfs_img: # Dfs agent
-            if self.current_pos_dfs == self.mode.red_power_dfs.pos:
+        if self.mode.blue_power_dfs_img: # Dfs agent
+            if self.current_pos_dfs == self.mode.blue_power_dfs.pos:
                 pass
 
-        if self.mode.red_power_bfs_img: # Dfs agent
-            if self.current_pos_bfs == self.mode.red_power_bfs.pos:
+        if self.mode.blue_power_bfs_img: # Dfs agent
+            if self.current_pos_bfs == self.mode.blue_power_bfs.pos:
                 pass   
 
-        if self.mode.red_power_maam_img: # Player
-            if self.current_pos == self.mode.red_power_maam.pos:
-                pass
+        if self.mode.blue_power_maam_img: # Player
+            if self.current_pos == self.mode.blue_power_maam.pos:
+                self.current_pos = self.mode.blue_power_maam.move_closer(self.mode.player.can_explore)
 
     def violet_power(self, block):
-        if self.mode.red_power_a_img: # A agent
-            if self.current_pos_a == self.mode.red_power_a.pos:
+        if self.mode.violet_power_a_img: # A agent
+            if self.current_pos_a == self.mode.violet_power_a.pos:
                 pass
 
-        if self.mode.red_power_dfs_img: # Dfs agent
-            if self.current_pos_dfs == self.mode.red_power_dfs.pos:
+        if self.mode.violet_power_dfs_img: # Dfs agent
+            if self.current_pos_dfs == self.mode.violet_power_dfs.pos:
                 pass
 
-        if self.mode.red_power_bfs_img: # Dfs agent
-            if self.current_pos_bfs == self.mode.red_power_bfs.pos:
+        if self.mode.violet_power_bfs_img: # Dfs agent
+            if self.current_pos_bfs == self.mode.violet_power_bfs.pos:
                pass  
 
-        if self.mode.red_power_maam_img: # Player
-            if self.current_pos == self.mode.red_power_maam.pos:
+        if self.mode.violet_power_maam_img: # Player
+            if self.current_pos == self.mode.violet_power_maam.pos:
                 pass
             

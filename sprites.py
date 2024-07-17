@@ -244,7 +244,7 @@ class mode:
         self.fog_maam = Smoke(self.maze_maam.position(), self.maze_maam.tile, self.maze_maam.path_format, fog_adjustment)
 
         # Player setting
-        self.player = Player(self.maze_maam.tile, self.fog_maam.starting_places, self.maze_maam.path_format)
+        self.player = Player(self.maze_maam.tile, self.fog_maam.starting_places, self.maze_maam.path_format, self.maze_maam.portal_format)
 
         # agent player setting
         self.bfs_agent = BFS_agent(self.maze_bfs.tile, self.fog_bfs.starting_places, self.maze_bfs.path_format, self.maze_bfs.portal_format)
@@ -268,24 +268,29 @@ class mode:
             self.red_power_bfs = Red(self.maze_bfs.path_format, self.red_power_bfs_img)
 
         # blue power up setting
+        a_portal = tuple(self.a_agent.portal[0])
+        maam_portal = (self.player.portal)
+        player_unexplored = np.array(self.player.unexplored)
+        dfs_unexplored = np.array(self.dfs_agent.unexplored)
+        bfs_unexplored = np.array(self.bfs_agent.unexplored)
         if self.blue_power_a_img:
-            self.blue_power_a = Blue(self.maze_a.path_format, self.blue_power_a_img)
+            self.blue_power_a = Blue(self.a_agent.unexplored, self.blue_power_a_img, a_portal)
         if self.blue_power_maam_img:
-            self.blue_power_maam = Blue(self.maze_maam.path_format, self.blue_power_maam_img)
+            self.blue_power_maam = Blue(player_unexplored, self.blue_power_maam_img, maam_portal)
         if self.blue_power_dfs_img:
-            self.blue_power_dfs = Blue(self.maze_dfs.path_format, self.blue_power_dfs_img)
+            self.blue_power_dfs = Blue(dfs_unexplored, self.blue_power_dfs_img, self.dfs_agent.portal)
         if self.blue_power_bfs_img:
-            self.blue_power_bfs = Blue(self.maze_bfs.path_format, self.blue_power_bfs_img)
+            self.blue_power_bfs = Blue(bfs_unexplored, self.blue_power_bfs_img, self.bfs_agent.portal)
 
         # violet power up setting
         if self.violet_power_a_img:
-            self.violet_power_a = Violet(self.maze_a.path_format, self.violet_power_a_img)
+            self.violet_power_a = Violet(self.violet_power_a_img)
         if self.violet_power_maam_img:
-            self.violet_power_maam = Violet(self.maze_maam.path_format, self.violet_power_maam_img)
+            self.violet_power_maam = Violet(self.violet_power_maam_img)
         if self.violet_power_dfs_img:
-            self.violet_power_dfs = Violet(self.maze_dfs.path_format, self.violet_power_dfs_img)
+            self.violet_power_dfs = Violet(self.violet_power_dfs_img)
         if self.violet_power_bfs_img:
-            self.violet_power_bfs = Violet(self.maze_bfs.path_format, self.violet_power_bfs_img)
+            self.violet_power_bfs = Violet(self.violet_power_bfs_img)
 
 
 
