@@ -500,19 +500,51 @@ class Setup:
     def blue_power(self, block):
         if self.mode.blue_power_a_img: # A agent
             if self.current_pos_a == self.mode.blue_power_a.pos:
-                pass
+                # Move one point closer to the finish point
+                self.current_pos_a = self.mode.blue_power_bfs.move_closer(self.mode.a_agent.can_explore)
+
+                # Update fog
+                self.mode.fog_a.remove_adjacent_smokes(self.current_pos_a, block[1][2])
+                self.mode.fog_a.remove_current_smoke(self.current_pos_a, block[1][2])
+
+                # Update explored, unexplored, and can explore paths
+                self.mode.a_agent.update_path(self.current_pos_a)
 
         if self.mode.blue_power_dfs_img: # Dfs agent
             if self.current_pos_dfs == self.mode.blue_power_dfs.pos:
-                pass
+                # Move one point closer to the finish point
+                self.current_pos_bfs = self.mode.blue_power_bfs.move_closer(self.mode.dfs_agent.can_explore)
+
+                # Update fog
+                self.mode.fog_dfs.remove_adjacent_smokes(self.current_pos_dfs, block[1][2])
+                self.mode.fog_dfs.remove_current_smoke(self.current_pos_dfs, block[1][2])
+
+                # Update explored, unexplored, and can explroe paths
+                self.mode.dfs_agent.update_path(self.current_pos_dfs)
 
         if self.mode.blue_power_bfs_img: # Dfs agent
             if self.current_pos_bfs == self.mode.blue_power_bfs.pos:
-                pass   
+                # Move one point closer to the finish point
+                self.current_pos_bfs = self.mode.blue_power_bfs.move_closer(self.mode.bfs_agent.can_explore)
+
+                # Update fog
+                self.mode.fog_bfs.remove_adjacent_smokes(self.current_pos_bfs, block[1][2])
+                self.mode.fog_bfs.remove_current_smoke(self.current_pos_bfs, block[1][2])
+
+                # Update explored, unexplored, and can explroe paths
+                self.mode.bfs_agent.update_path(self.current_pos_bfs)   
 
         if self.mode.blue_power_maam_img: # Player
             if self.current_pos == self.mode.blue_power_maam.pos:
+                # Move one point closer to the finish point
                 self.current_pos = self.mode.blue_power_maam.move_closer(self.mode.player.can_explore)
+
+                # Update fog
+                self.mode.fog_maam.remove_adjacent_smokes(self.current_pos, block[1][2])
+                self.mode.fog_maam.remove_current_smoke(self.current_pos, block[1][2])
+
+                # Update explored, unexplored, and can explroe paths
+                self.mode.player.update_path(self.current_pos, block[1][2])
 
     def violet_power(self, block):
         if self.mode.violet_power_a_img: # A agent

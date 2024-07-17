@@ -50,6 +50,7 @@ class Player:
             if (pos in adjacent_tile) and (pos not in self.can_explore):
                 self.can_explore.append(pos)
 
+        self.can_explore.remove(current_pos)
         self.explored.append(current_pos)
     
 class A_agent():
