@@ -80,8 +80,6 @@ class Setup:
         self.tile_size_medium = int((self.screen_width // 2 - 1)* .05)
         self.tile_size_hard = int((self.screen_width // 2 - 1)* .035)
         self.tile_size_god = int((self.screen_width // 2 - 1)* .027)
-        print(self.tile_size_god)
-        
 
         # Button positions and colors
         self.b_x_center = self.center_x
@@ -123,11 +121,6 @@ class Setup:
 
         # Maze positions
         self.pos = []
-
-        # Print Debugging
-        #print(self.quadrant1,self.quadrant2,self.quadrant3,self.quadrant4)
-        #print(self.quadrant1_end,self.quadrant2_end,self.quadrant3_end,self.quadrant4_end)
-        #print('screen size: ',self.screen_width, self.screen_height)
 
     def run(self):
         while self.running:
@@ -564,19 +557,84 @@ class Setup:
                 self.mode.bfs_agent.update_path(self.current_pos_bfs)   
 
     def violet_power(self, block):
+        if self.mode.violet_power_maam_img: # Player
+            if self.current_pos == self.mode.violet_power_maam.pos:
+                # Move one point closer to the finish point
+                self.current_pos = self.mode.violet_power_maam.move_closer(self.mode.player.can_explore)
+
+                # Update fog
+                self.mode.fog_maam.remove_adjacent_smokes(self.current_pos, block[1][2])
+                self.mode.fog_maam.remove_current_smoke(self.current_pos, block[1][2])
+
+                # Update explored, unexplored, and can explroe paths
+                self.mode.player.update_path(self.current_pos, block[1][2])
+
         if self.mode.violet_power_a_img: # A agent
             if self.current_pos_a == self.mode.violet_power_a.pos:
-                pass
+                # Move one point closer to the finish point
+                inner_tuples = [outer for outer in self.mode.a_agent.can_explore]
+                innest_tuples = [tuples for tuples, value in inner_tuples]
+                self.current_pos_a = self.mode.violet_power_a.move_closer(innest_tuples)
+
+                # Update fog
+                self.mode.fog_a.remove_adjacent_smokes(self.current_pos_a, block[1][2])
+                self.mode.fog_a.remove_current_smoke(self.current_pos_a, block[1][2])
+
+                # Update explored, unexplored, and can explore paths
+                self.mode.a_agent.update_path(self.current_pos_a)
+                
+                # Move one point closer to the finish point
+                inner_tuples = [outer for outer in self.mode.a_agent.can_explore]
+                innest_tuples = [tuples for tuples, value in inner_tuples]
+                self.current_pos_a = self.mode.violet_power_a.move_closer(innest_tuples)
+
+                # Update fog
+                self.mode.fog_a.remove_adjacent_smokes(self.current_pos_a, block[1][2])
+                self.mode.fog_a.remove_current_smoke(self.current_pos_a, block[1][2])
+
+                # Update explored, unexplored, and can explore paths
+                self.mode.a_agent.update_path(self.current_pos_a)
 
         if self.mode.violet_power_dfs_img: # Dfs agent
             if self.current_pos_dfs == self.mode.violet_power_dfs.pos:
-                pass
+                # Move one point closer to the finish point
+                self.current_pos_dfs = self.mode.violet_power_dfs.move_closer(self.mode.dfs_agent.can_explore)
 
-        if self.mode.violet_power_bfs_img: # Dfs agent
+                # Update fog
+                self.mode.fog_dfs.remove_adjacent_smokes(self.current_pos_dfs, block[1][2])
+                self.mode.fog_dfs.remove_current_smoke(self.current_pos_dfs, block[1][2])
+
+                # Update explored, unexplored, and can explroe paths
+                self.mode.dfs_agent.update_path(self.current_pos_dfs)
+
+                # Move one point closer to the finish point
+                self.current_pos_dfs = self.mode.violet_power_dfs.move_closer(self.mode.dfs_agent.can_explore)
+
+                # Update fog
+                self.mode.fog_dfs.remove_adjacent_smokes(self.current_pos_dfs, block[1][2])
+                self.mode.fog_dfs.remove_current_smoke(self.current_pos_dfs, block[1][2])
+
+                # Update explored, unexplored, and can explroe paths
+                self.mode.dfs_agent.update_path(self.current_pos_dfs)
+
+        if self.mode.violet_power_bfs_img: # Bfs agent
             if self.current_pos_bfs == self.mode.violet_power_bfs.pos:
-               pass  
+                # Move one point closer to the finish point
+                self.current_pos_bfs = self.mode.violet_power_bfs.move_closer(self.mode.bfs_agent.can_explore)
 
-        if self.mode.violet_power_maam_img: # Player
-            if self.current_pos == self.mode.violet_power_maam.pos:
-                pass
-            
+                # Update fog
+                self.mode.fog_bfs.remove_adjacent_smokes(self.current_pos_bfs, block[1][2])
+                self.mode.fog_bfs.remove_current_smoke(self.current_pos_bfs, block[1][2])
+
+                # Update explored, unexplored, and can explroe paths
+                self.mode.bfs_agent.update_path(self.current_pos_bfs)
+
+                # Move one point closer to the finish point
+                self.current_pos_bfs = self.mode.violet_power_bfs.move_closer(self.mode.bfs_agent.can_explore)
+
+                # Update fog
+                self.mode.fog_bfs.remove_adjacent_smokes(self.current_pos_bfs, block[1][2])
+                self.mode.fog_bfs.remove_current_smoke(self.current_pos_bfs, block[1][2])
+
+                # Update explored, unexplored, and can explroe paths
+                self.mode.bfs_agent.update_path(self.current_pos_bfs)

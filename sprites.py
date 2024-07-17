@@ -272,13 +272,13 @@ class mode:
 
         # violet power up setting
         if self.violet_power_a_img:
-            self.violet_power_a = Violet(self.violet_power_a_img)
+            self.violet_power_a = Violet(self.a_agent.unexplored, self.violet_power_a_img, a_portal)
         if self.violet_power_maam_img:
-            self.violet_power_maam = Violet(self.violet_power_maam_img)
+            self.violet_power_maam = Violet(player_unexplored, self.violet_power_maam_img, maam_portal)
         if self.violet_power_dfs_img:
-            self.violet_power_dfs = Violet(self.violet_power_dfs_img)
+            self.violet_power_dfs = Violet(dfs_unexplored, self.violet_power_dfs_img, self.dfs_agent.portal)
         if self.violet_power_bfs_img:
-            self.violet_power_bfs = Violet(self.violet_power_bfs_img)
+            self.violet_power_bfs = Violet(bfs_unexplored, self.violet_power_bfs_img, self.bfs_agent.portal)
 
 
 
