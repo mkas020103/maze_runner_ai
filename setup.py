@@ -17,8 +17,8 @@ class Setup:
         self.screen_width, self.screen_height = pyautogui.size()
 
         # Adjustment on screen size
-        self.screen_width = int(self.screen_width * 0.9)
-        self.screen_height = int(self.screen_height * 0.9)
+        self.screen_width = int(self.screen_width * 0.7)
+        self.screen_height = int(self.screen_height * 0.7)
 
         # Number of FPS
         self.clock = pygame.time.Clock()
@@ -68,6 +68,15 @@ class Setup:
         self.quadrant2 = (self.screen_width // 2, 0)  # Upper right
         self.quadrant3 = (0, self.screen_height // 2)  # Lower left
         self.quadrant4 = (self.screen_width // 2, self.screen_height // 2)  # Lower right
+
+        # Quadrants' bottom-right coordinates
+        self.quadrant1_end = (self.screen_width // 2 - 1, self.screen_height // 2 - 1)  # End of upper left
+        self.quadrant2_end = (self.screen_width - 1, self.screen_height // 2 - 1)  # End of upper right
+        self.quadrant3_end = (self.screen_width // 2 - 1, self.screen_height - 1)  # End of lower left
+        self.quadrant4_end = (self.screen_width - 1, self.screen_height - 1)  # End of lower right
+        
+        print(self.quadrant1,self.quadrant2,self.quadrant3,self.quadrant4)
+        print(self.quadrant1_end,self.quadrant2_end,self.quadrant3_end,self.quadrant4_end)
 
         # Button positions and colors
         self.b_x_center = self.center_x
@@ -269,7 +278,9 @@ class Setup:
 
                     # Set the mode of the game and switch to gamepage
                     if self.easy_button.is_over(pos):
-                        font_list = [('BFS', (520,300)), ('A', (520,770)), ('DFS', (1320,770))]
+                        font_list = [('BFS', (self.quadrant1_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant1_end[1] - int(self.quadrant1_end[1]*.5))), 
+                                     ('A', (self.quadrant3_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant3_end[1] - int(self.quadrant3_end[1]*.25))), 
+                                     ('DFS', (self.quadrant4_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant4_end[1] - int(self.quadrant4_end[1]*.25)))]
                         # UPPER LEFT, LOWER RIGHT, UPPER RIGHT, LOWER LEFT
                         maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.easy), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.easy), 
                                      (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.easy), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.easy)]
@@ -279,7 +290,9 @@ class Setup:
                         self.game_page = True
 
                     elif self.medium_button.is_over(pos):
-                        font_list = [('BFS', (720,250)), ('A', (720,770)), ('DFS', (1070,770))]
+                        font_list = [('BFS', (self.quadrant1_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant1_end[1] - int(self.quadrant1_end[1]*.5))), 
+                                     ('A', (self.quadrant3_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant3_end[1] - int(self.quadrant3_end[1]*.25))), 
+                                     ('DFS', (self.quadrant4_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant4_end[1] - int(self.quadrant4_end[1]*.25)))]
                         maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.medium), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.medium), 
                                      (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.medium), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.medium)]
                         self.mode = mode(font_list, maze_list, 48)
@@ -288,7 +301,9 @@ class Setup:
                         self.game_page = True
 
                     elif self.hard_button.is_over(pos):
-                        font_list = [('BFS', (720,250)), ('A', (720,770)), ('DFS', (1085,770))]
+                        font_list = [('BFS', (self.quadrant1_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant1_end[1] - int(self.quadrant1_end[1]*.5))), 
+                                     ('A', (self.quadrant3_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant3_end[1] - int(self.quadrant3_end[1]*.25))), 
+                                     ('DFS', (self.quadrant4_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant4_end[1] - int(self.quadrant4_end[1]*.25)))]
                         maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.hard), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.hard), 
                                      (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.hard), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.hard)]
                         self.mode = mode(font_list, maze_list,34)
@@ -297,7 +312,9 @@ class Setup:
                         self.game_page = True
 
                     elif self.god_button.is_over(pos):
-                        font_list = [('BFS', (670,250)), ('A', (670,755)), ('DFS', (1100,755))]
+                        font_list = [('BFS', (self.quadrant1_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant1_end[1] - int(self.quadrant1_end[1]*.5))), 
+                                     ('A', (self.quadrant3_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant3_end[1] - int(self.quadrant3_end[1]*.25))), 
+                                     ('DFS', (self.quadrant4_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant4_end[1] - int(self.quadrant4_end[1]*.25)))]
                         maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.god), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.god), 
                                      (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.god), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.god)]
                         self.mode = mode(font_list, maze_list, 20)
@@ -305,10 +322,12 @@ class Setup:
                         self.difficulty_page = False
                         self.game_page = True
                     elif self.custom_button.is_over(pos):
-                        font_list = [('BFS', (670,30)), ('A', (670,950)), ('DFS', (1070,950))]
+                        font_list = [('BFS', (self.quadrant1_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant1_end[1] - int(self.quadrant1_end[1]*.5))), 
+                                     ('A', (self.quadrant3_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant3_end[1] - int(self.quadrant3_end[1]*.25))), 
+                                     ('DFS', (self.quadrant4_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant4_end[1] - int(self.quadrant4_end[1]*.25)))]
                         size = map.calc_custom()
                         # Map sizes
-                        if size == 6:   
+                        if size == 6:
                             maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.custom), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.custom), 
                                      (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.custom), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.custom)]
                             fog = 50
