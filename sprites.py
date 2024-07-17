@@ -25,7 +25,7 @@ class Maze:
     """
     Setup the maze into four parts.
     """
-    def __init__(self, xposition, yposition, maze_map, custom_size):
+    def __init__(self, xposition, yposition, maze_map, quadrant_size):
         self.maze = maze_map
         self.wall_format = []
         self.path_format = []
@@ -44,19 +44,7 @@ class Maze:
         self.violet_power_img= pygame.image.load('img/violetpill.png')
 
         # Adjust block size
-        if custom_size != None:
-            self.tile = custom_size
-        else:
-            if len(self.maze) <= 6:
-                self.tile = 50
-            elif len(self.maze) <= 10:
-                self.tile = 33
-            elif len(self.maze) <= 14:
-                self.tile = 24
-            elif len(self.maze) <= 20:
-                self.tile = 18
-            else: 
-                self.tile = 8
+        self.tile = quadrant_size
 
         row_count = 0
         # Add the type of block on a specific screen position
@@ -225,17 +213,17 @@ class mode:
     """
     The font, maze, player, and fog settings of each mode
     """
-    def __init__(self, font_list, maze_list, fog_adjustment, custom_map_size=None):
+    def __init__(self, font_list, maze_list, fog_adjustment, quadrant_size):
         # Font setting
         self.d1 = Font(font_list[0][0], font_list[0][1])
         self.d2 = Font(font_list[1][0], font_list[1][1])
         self.d3 = Font(font_list[2][0], font_list[2][1])
 
         # Maze setting
-        self.maze_bfs = Maze(maze_list[0][0], maze_list[0][1], maze_list[0][2], custom_map_size)
-        self.maze_dfs = Maze(maze_list[1][0], maze_list[1][1], maze_list[1][2], custom_map_size)
-        self.maze_maam = Maze(maze_list[2][0], maze_list[2][1], maze_list[2][2], custom_map_size)
-        self.maze_a = Maze(maze_list[3][0], maze_list[3][1], maze_list[3][2], custom_map_size)
+        self.maze_bfs = Maze(maze_list[0][0], maze_list[0][1], maze_list[0][2], quadrant_size)
+        self.maze_dfs = Maze(maze_list[1][0], maze_list[1][1], maze_list[1][2], quadrant_size)
+        self.maze_maam = Maze(maze_list[2][0], maze_list[2][1], maze_list[2][2], quadrant_size)
+        self.maze_a = Maze(maze_list[3][0], maze_list[3][1], maze_list[3][2], quadrant_size)
 
         # Fog setting
         self.fog_bfs = Smoke(self.maze_bfs.position(), self.maze_bfs.tile, self.maze_bfs.path_format, fog_adjustment)
