@@ -369,13 +369,18 @@ class button:
     
 class Font:
     # Render the text
-    def __init__(self, text, pos, text_size=74, color=(43, 22, 12), font_type='calibri'):
+    def __init__(self, text, pos, text_size=74, color=(43, 22, 12), font_type='calibri', font_pos='center'):
         font = pygame.font.SysFont(font_type, text_size) 
         self.text_color = color
         self.text_surface = font.render(text, True, self.text_color)
 
         # Position the text at the given coordinates
-        self.text_rect = self.text_surface.get_rect(topleft=pos)
+        if font_pos == 'left':
+            self.text_rect = self.text_surface.get_rect(topleft=pos)
+        else:
+            # Position the text
+            self.text_rect = self.text_surface.get_rect()
+            self.text_rect.center = pos
 
     def draw(self, win):
         win.blit(self.text_surface, self.text_rect)

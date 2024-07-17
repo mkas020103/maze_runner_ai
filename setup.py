@@ -121,9 +121,10 @@ class Setup:
         self.instruction_text = []
 
         self.spaces = 50
+        self.instruction_font_size = int((self.screen_width // 2 - 1) * .03)
         for text in self.lines:
-            self.instruction_text.append(Font(text, (50, self.spaces), 25, (0, 0, 0), 'bahnschrift'))
-            self.spaces += 25
+            self.instruction_text.append(Font(text, (50, self.spaces), self.instruction_font_size, (0, 0, 0), 'bahnschrift', 'left'))
+            self.spaces += self.instruction_font_size
 
         # Position of the player
         self.current_pos = None
