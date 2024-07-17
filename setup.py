@@ -3,6 +3,7 @@ from pygame.locals import *
 import map
 from sprites import *
 import os
+import pyautogui
 
 class Setup:
     """
@@ -12,10 +13,12 @@ class Setup:
         os.system("cls || clear")
         print('\ngame start:')
         pygame.init()
-        
         # Game screen size
-        self.screen_width = 1760
-        self.screen_height = 990
+        self.screen_width, self.screen_height = pyautogui.size()
+
+        # Adjustment on screen size
+        self.screen_width = int(self.screen_width * 0.9)
+        self.screen_height = int(self.screen_height * 0.9)
 
         # Number of FPS
         self.clock = pygame.time.Clock()
@@ -40,25 +43,44 @@ class Setup:
         self.hell_bg = pygame.image.load('img\hell.jpg')
         self.hell_bg_resized = pygame.transform.scale(self.hell_bg, (self.screen_width, self.screen_height))
 
+        # Define the margin
+        self.margin = 15
+
         # Button parameters
-        self.b_height = 120
-        self.b_width = 220
-        self.b_x = (self.screen_width - self.b_width) // 2
+        self.b_height = int(self.screen_height / 8)
+        self.b_width = int(self.screen_width / 8)
+
+        # X Position settings
+        self.center_x = (self.screen_width - self.b_width) // 2
+        self.left_x = ((self.screen_width - self.b_width) // 2) - 250
+        self.right_x = ((self.screen_width - self.b_width) // 2) + 250
+        self.upper_right_x = self.screen_width - self.margin
+
+        # Y Position settings
+        self.center_y = (self.screen_height - self.b_width) // 2
+        self.left_y = ((self.screen_height - self.b_width) // 2) - 250
+        self.right_y = ((self.screen_height - self.b_width) // 2) + 250
+
+        # Button positions and colors
+        self.b_x_center = self.center_x
+        self.b_x_left = self.left_x
+        self.b_x_right = self.right_x
         self.b_color = (92, 64, 51)
         self.b_color_hover = (46, 32, 26)
 
         # Buttons and placement in screen
-        self.start_button = button(x=self.b_x, y=200, width=self.b_width, height=self.b_height, color=self.b_color, name="Escape") # start button
-        self.instruction_button = button(x=self.b_x, y=350, width=self.b_width, height=self.b_height, color=self.b_color, name="Instruction") # instruction button
-        self.back_button = button(x=self.b_x, y=350, width=self.b_width, height=self.b_height, color=self.b_color, name="Back") # back button
-        self.easy_button = button(x=500, y=250, width=self.b_width, height=self.b_height, color=self.b_color, name="easy") # easy button
-        self.medium_button = button(x=1040, y=250, width=self.b_width, height=self.b_height, color=self.b_color, name="medium") # medium button
-        self.hard_button = button(x=500, y=400, width=self.b_width, height=self.b_height, color=self.b_color, name="hard") # hard button
-        self.god_button = button(x=1040, y=400, width=self.b_width, height=self.b_height, color=self.b_color, name="god") # god button
-        self.custom_button = button(x=self.b_x, y=550, width=self.b_width, height=self.b_height, color=self.b_color, name="custom") # custom button
-        self.back_m_button = button(x=self.b_x, y=700, width=self.b_width, height=self.b_height, color=self.b_color, name="back") # back to main button
-        self.quit_button = button(x=1650, y=15, width=75, height=30, color=self.b_color, name="quit") # quit button
-        self.main_button = button(x=self.b_x, y=500, width=self.b_width, height=self.b_height, color=self.b_color, name="Main") # retry button
+        self.start_button = button(x=self.b_x_center, y=200, width=self.b_width, height=self.b_height, color=self.b_color, name="Escape") # start button
+        self.start_inst_button = button(x=(self.upper_right_x - 190), y=self.margin, width=100, height=30, color=self.b_color, name="Escape") # start button
+        self.instruction_button = button(x=self.b_x_center, y=350, width=self.b_width, height=self.b_height, color=self.b_color, name="Instruction") # instruction button
+        self.back_button = button(x=(self.upper_right_x - 75), y=self.margin, width=75, height=30, color=self.b_color, name="Back") # back button
+        self.easy_button = button(x=self.b_x_left, y=250, width=self.b_width, height=self.b_height, color=self.b_color, name="easy") # easy button
+        self.medium_button = button(x=self.b_x_right, y=250, width=self.b_width, height=self.b_height, color=self.b_color, name="medium") # medium button
+        self.hard_button = button(x=self.b_x_left, y=400, width=self.b_width, height=self.b_height, color=self.b_color, name="hard") # hard button
+        self.god_button = button(x=self.b_x_right, y=400, width=self.b_width, height=self.b_height, color=self.b_color, name="god") # god button
+        self.custom_button = button(x=self.b_x_center, y=550, width=self.b_width, height=self.b_height, color=self.b_color, name="custom") # custom button
+        self.back_m_button = button(x=self.b_x_center, y=700, width=self.b_width, height=self.b_height, color=self.b_color, name="back") # back to main button
+        self.quit_button = button(x=self.upper_right_x - 75, y=self.margin, width=75, height=30, color=self.b_color, name="quit") # quit button
+        self.main_button = button(x=self.b_x_center, y=500, width=self.b_width, height=self.b_height, color=self.b_color, name="Main") # retry button
         
         # Texts
         self.lost = Font('WA HA HA Bonak', (self.screen_width / 2, 200))
@@ -75,6 +97,9 @@ class Setup:
 
         # Maze positions
         self.pos = []
+
+        # Print Debugging
+        print('screen size: ',self.screen_width, self.screen_height)
 
     def run(self):
         while self.running:
@@ -109,8 +134,8 @@ class Setup:
                 self.current_pos_bfs = None
 
             elif self.instruction_page:
-                self.start_button.draw(self.screen, (18, 1, 1), 60)
-                self.back_button.draw(self.screen, (18, 1, 1), 60) 
+                self.start_inst_button.draw(self.screen, (18, 1, 1), 30)
+                self.back_button.draw(self.screen, (18, 1, 1), 30) 
 
             elif self.difficulty_page:
                 self.easy_button.draw(self.screen, (18, 1, 1), 60) 
@@ -307,7 +332,7 @@ class Setup:
             elif self.instruction_page:
                 # If the mouse is click check through all possible pages
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.start_button.is_over(pos):
+                    if self.start_inst_button.is_over(pos):
                         self.instruction_page = False
                         self.difficulty_page = True
                     if self.back_button.is_over(pos):
@@ -316,15 +341,15 @@ class Setup:
 
                 # If the mouse is hovered over a button
                 if event.type == pygame.MOUSEMOTION:
-                    if self.start_button.is_over(pos):
-                        self.start_button.color = self.b_color_hover
+                    if self.start_inst_button.is_over(pos):
+                        self.start_inst_button.color = self.b_color_hover
                     else:
-                        self.start_button.color = self.b_color
+                        self.start_inst_button.color = self.b_color
 
-                    if self.instruction_button.is_over(pos):
-                        self.instruction_button.color = self.b_color_hover
+                    if self.back_button.is_over(pos):
+                        self.back_button.color = self.b_color_hover
                     else:
-                        self.instruction_button.color = self.b_color
+                        self.back_button.color = self.b_color
             elif self.lose_page:
                 # If the mouse is click check through all possible pages
                 if event.type == pygame.MOUSEBUTTONDOWN:
