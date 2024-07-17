@@ -72,20 +72,35 @@ class Maze:
                     self.path_format.append([b.give(),'p'])
                     self.positions.append([b.give(),'p'])
                     if block == 1:
-                        r = Block(self.red_power_img, self.tile, col_count, row_count, xposition, yposition)
-                        self.red_power = r.give()
+                        if self.red_power == None:
+                            r = Block(self.red_power_img, self.tile, col_count, row_count, xposition, yposition)
+                            self.red_power = r.give()
+                        else:
+                            raise ValueError("Only 1 type of power up is allowed")
                     elif block == 2:
-                        bl = Block(self.blue_power_img, self.tile, col_count, row_count, xposition, yposition)
-                        self.blue_power = bl.give()
+                        if self.blue_power == None:
+                            bl = Block(self.blue_power_img, self.tile, col_count, row_count, xposition, yposition)
+                            self.blue_power = bl.give()
+                        else:
+                            raise ValueError("Only 1 type of power up is allowed")
                     elif block == 3:
-                        v = Block(self.violet_power_img, self.tile, col_count, row_count, xposition, yposition)
-                        self.violet_power = v.give()
+                        if self.violet_power == None:
+                            v = Block(self.violet_power_img, self.tile, col_count, row_count, xposition, yposition)
+                            self.violet_power = v.give()
+                        else:
+                            raise ValueError("Only 1 type of power up is allowed")
                 elif block == 8:
                     b = Block(self.portal, self.tile, col_count, row_count, xposition, yposition)
                     self.portal_format.append([b.give(),'l'])
                     self.positions.append([b.give(),'l'])
                 col_count += 1
             row_count += 1
+
+        if not self.portal_format:
+            raise ValueError('One finish point should be on the map')
+        
+        if not self.path_format:
+            raise ValueError('Atleast one path should be on the map')
 
     def position(self):
         return self.positions

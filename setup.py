@@ -63,6 +63,12 @@ class Setup:
         self.lower_y = ((self.screen_height - self.b_height) // 2) + 70
         self.lower_2y = ((self.screen_height - self.b_height) // 2) + 220
 
+        # Quadrants
+        self.quadrant1 = (0, 0)  # Upper left
+        self.quadrant2 = (self.screen_width // 2, 0)  # Upper right
+        self.quadrant3 = (0, self.screen_height // 2)  # Lower left
+        self.quadrant4 = (self.screen_width // 2, self.screen_height // 2)  # Lower right
+
         # Button positions and colors
         self.b_x_center = self.center_x
         self.b_x_left = self.left_x
@@ -264,7 +270,9 @@ class Setup:
                     # Set the mode of the game and switch to gamepage
                     if self.easy_button.is_over(pos):
                         font_list = [('BFS', (520,300)), ('A', (520,770)), ('DFS', (1320,770))]
-                        maze_list = [(150, 150,  map.easy), (1450, 600,  map.easy), (1450, 150,  map.easy), (150, 600,  map.easy)] # UPPER LEFT, LOWER RIGHT, UPPER RIGHT, LOWER LEFT
+                        # UPPER LEFT, LOWER RIGHT, UPPER RIGHT, LOWER LEFT
+                        maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.easy), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.easy), 
+                                     (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.easy), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.easy)]
                         self.mode = mode(font_list, maze_list, 50)
 
                         self.difficulty_page = False
@@ -272,7 +280,8 @@ class Setup:
 
                     elif self.medium_button.is_over(pos):
                         font_list = [('BFS', (720,250)), ('A', (720,770)), ('DFS', (1070,770))]
-                        maze_list = [(150, 50, map.medium), (1200, 550,  map.medium), (1200, 50,  map.medium), (150, 550,  map.medium)]
+                        maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.medium), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.medium), 
+                                     (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.medium), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.medium)]
                         self.mode = mode(font_list, maze_list, 48)
 
                         self.difficulty_page = False
@@ -280,7 +289,8 @@ class Setup:
 
                     elif self.hard_button.is_over(pos):
                         font_list = [('BFS', (720,250)), ('A', (720,770)), ('DFS', (1085,770))]
-                        maze_list = [(150, 50, map.hard), (1200, 500,  map.hard), (1200, 50,  map.hard), (150, 500,  map.hard)]
+                        maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.hard), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.hard), 
+                                     (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.hard), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.hard)]
                         self.mode = mode(font_list, maze_list,34)
 
                         self.difficulty_page = False
@@ -288,16 +298,34 @@ class Setup:
 
                     elif self.god_button.is_over(pos):
                         font_list = [('BFS', (670,250)), ('A', (670,755)), ('DFS', (1100,755))]
-                        maze_list = [(125, 20, map.god), (1200, 500,  map.god), (1200, 20,  map.god), (125, 500,  map.god)]
+                        maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.god), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.god), 
+                                     (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.god), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.god)]
                         self.mode = mode(font_list, maze_list, 20)
 
                         self.difficulty_page = False
                         self.game_page = True
                     elif self.custom_button.is_over(pos):
                         font_list = [('BFS', (670,30)), ('A', (670,950)), ('DFS', (1070,950))]
-                        fog, map_size, pos = map.calc_custom()
-                        maze_list = [(pos[''], pos[''], map.custom), (pos[''], pos[''],  map.custom), (pos[''], pos[''],  map.custom), (pos[''], pos[''],  map.custom)]
-                        self.mode = mode(font_list, maze_list, fog, map_size)
+                        size = map.calc_custom()
+                        # Map sizes
+                        if size == 6:   
+                            maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.custom), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.custom), 
+                                     (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.custom), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.custom)]
+                            fog = 50
+                        elif size == 10:
+                            maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.custom), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.custom), 
+                                     (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.custom), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.custom)]
+                            fog = 48
+                        elif size == 14:
+                            maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.custom), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.custom), 
+                                     (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.custom), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.custom)]
+                            fog = 34
+                        else:
+                            maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.custom), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.custom), 
+                                     (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.custom), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.custom)]
+                            fog = 20
+
+                        self.mode = mode(font_list, maze_list, fog)
 
                         self.difficulty_page = False
                         self.game_page = True
@@ -450,48 +478,19 @@ class Setup:
     def blue_power(self, block):
         if self.mode.red_power_a_img: # A agent
             if self.current_pos_a == self.mode.red_power_a.pos:
-                # change current position of agent to a random place,can be explored or not explored
-                self.current_pos_a = self.mode.red_power_a.random_add()
-
-                # Update fog
-                self.mode.fog_a.remove_adjacent_smokes(self.current_pos_a, block[1][2])
-                self.mode.fog_a.remove_current_smoke(self.current_pos_a, block[1][2])
-
-                # Update explored, unexplored, and can explore paths
-                self.mode.a_agent.update_path(self.current_pos_a)
+                pass
 
         if self.mode.red_power_dfs_img: # Dfs agent
             if self.current_pos_dfs == self.mode.red_power_dfs.pos:
-                # change current position of agent to a random place,can be explored or not explored
-                self.current_pos_dfs = self.mode.red_power_dfs.random_add()
-
-                # Update fog
-                self.mode.fog_dfs.remove_adjacent_smokes(self.current_pos_dfs, block[1][2])
-                self.mode.fog_dfs.remove_current_smoke(self.current_pos_dfs, block[1][2])
-
-                # Update explored, unexplored, and can explroe paths
-                self.mode.dfs_agent.update_path(self.current_pos_dfs)
+                pass
 
         if self.mode.red_power_bfs_img: # Dfs agent
             if self.current_pos_bfs == self.mode.red_power_bfs.pos:
-                # change current position of agent to a random place,can be explored or not explored
-                self.current_pos_bfs = self.mode.red_power_bfs.random_add()
-
-                # Update fog
-                self.mode.fog_bfs.remove_adjacent_smokes(self.current_pos_bfs, block[1][2])
-                self.mode.fog_bfs.remove_current_smoke(self.current_pos_bfs, block[1][2])
-
-                # Update explored, unexplored, and can explroe paths
-                self.mode.bfs_agent.update_path(self.current_pos_bfs)    
+                pass   
 
         if self.mode.red_power_maam_img: # Player
             if self.current_pos == self.mode.red_power_maam.pos:
-                # change current position of agent to a random place,can be explored or not explored
-                self.current_pos = self.mode.red_power_maam.random_add()
-
-                # Update fog
-                self.mode.fog_maam.remove_adjacent_smokes(self.current_pos, block[1][2])
-                self.mode.fog_maam.remove_current_smoke(self.current_pos, block[1][2])
+                pass
 
     def violet_power(self, block):
         if self.mode.red_power_a_img: # A agent
