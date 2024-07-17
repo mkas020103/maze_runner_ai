@@ -57,9 +57,11 @@ class Setup:
         self.upper_right_x = self.screen_width - self.margin
 
         # Y Position settings
-        self.center_y = (self.screen_height - self.b_width) // 2
-        self.left_y = ((self.screen_height - self.b_width) // 2) - 250
-        self.right_y = ((self.screen_height - self.b_width) // 2) + 250
+        self.center_y = (self.screen_height - self.b_height) // 2
+        self.upper_y = ((self.screen_height - self.b_height) // 2) - 50
+        self.upper_2y = ((self.screen_height - self.b_height) // 2) - 200
+        self.lower_y = ((self.screen_height - self.b_height) // 2) + 70
+        self.lower_2y = ((self.screen_height - self.b_height) // 2) + 220
 
         # Button positions and colors
         self.b_x_center = self.center_x
@@ -69,18 +71,22 @@ class Setup:
         self.b_color_hover = (46, 32, 26)
 
         # Buttons and placement in screen
-        self.start_button = button(x=self.b_x_center, y=200, width=self.b_width, height=self.b_height, color=self.b_color, name="Escape") # start button
-        self.start_inst_button = button(x=(self.upper_right_x - 190), y=self.margin, width=100, height=30, color=self.b_color, name="Escape") # start button
-        self.instruction_button = button(x=self.b_x_center, y=350, width=self.b_width, height=self.b_height, color=self.b_color, name="Instruction") # instruction button
+        self.start_button = button(x=self.b_x_center, y=self.upper_2y, width=self.b_width, height=self.b_height, color=self.b_color, name="Escape") # start button
+        self.instruction_button = button(x=self.b_x_center, y=self.upper_y, width=self.b_width, height=self.b_height, color=self.b_color, name="Instruction") # instruction button
+
+        self.start_inst_button = button(x=(self.upper_right_x - 190), y=self.margin, width=100, height=30, color=self.b_color, name="Escape") # start instruction button
         self.back_button = button(x=(self.upper_right_x - 75), y=self.margin, width=75, height=30, color=self.b_color, name="Back") # back button
-        self.easy_button = button(x=self.b_x_left, y=250, width=self.b_width, height=self.b_height, color=self.b_color, name="easy") # easy button
-        self.medium_button = button(x=self.b_x_right, y=250, width=self.b_width, height=self.b_height, color=self.b_color, name="medium") # medium button
-        self.hard_button = button(x=self.b_x_left, y=400, width=self.b_width, height=self.b_height, color=self.b_color, name="hard") # hard button
-        self.god_button = button(x=self.b_x_right, y=400, width=self.b_width, height=self.b_height, color=self.b_color, name="god") # god button
-        self.custom_button = button(x=self.b_x_center, y=550, width=self.b_width, height=self.b_height, color=self.b_color, name="custom") # custom button
-        self.back_m_button = button(x=self.b_x_center, y=700, width=self.b_width, height=self.b_height, color=self.b_color, name="back") # back to main button
+
+        self.easy_button = button(x=self.b_x_left, y=self.upper_2y, width=self.b_width, height=self.b_height, color=self.b_color, name="easy") # easy button
+        self.medium_button = button(x=self.b_x_right, y=self.upper_2y, width=self.b_width, height=self.b_height, color=self.b_color, name="medium") # medium button
+        self.hard_button = button(x=self.b_x_left, y=self.upper_y, width=self.b_width, height=self.b_height, color=self.b_color, name="hard") # hard button
+        self.god_button = button(x=self.b_x_right, y=self.upper_y, width=self.b_width, height=self.b_height, color=self.b_color, name="god") # god button
+        self.custom_button = button(x=self.b_x_center, y=self.lower_y, width=self.b_width, height=self.b_height, color=self.b_color, name="custom") # custom button
+        self.back_m_button = button(x=self.b_x_center, y=self.lower_2y, width=self.b_width, height=self.b_height, color=self.b_color, name="back") # back to main button
+
         self.quit_button = button(x=self.upper_right_x - 75, y=self.margin, width=75, height=30, color=self.b_color, name="quit") # quit button
-        self.main_button = button(x=self.b_x_center, y=500, width=self.b_width, height=self.b_height, color=self.b_color, name="Main") # retry button
+
+        self.main_button = button(x=self.b_x_center, y=self.center_y, width=self.b_width, height=self.b_height, color=self.b_color, name="Main") # Go back to Main button
         
         # Texts
         self.lost = Font('WA HA HA Bonak', (self.screen_width / 2, 200))
