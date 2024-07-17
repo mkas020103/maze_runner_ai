@@ -14,6 +14,14 @@ class Setup:
         os.system("cls || clear")
         print('\ngame start:')
         pygame.init()
+
+        # Open the file in read mode
+        file = open('instructions.txt', 'r')
+        self.file_content = file.read()
+        file.close()
+
+        self.lines = self.file_content.split('\n')
+
         # Game screen size
         self.screen_width, self.screen_height = pyautogui.size()
 
@@ -110,6 +118,12 @@ class Setup:
         # Texts
         self.lost = Font('WA HA HA Bonak', (self.screen_width / 2, 200))
         self.won = Font('Ano gusto mo congrats?', (self.screen_width / 2, 200))
+        self.instruction_text = []
+
+        self.spaces = 50
+        for text in self.lines:
+            self.instruction_text.append(Font(text, (50, self.spaces), 25, (0, 0, 0), 'bahnschrift'))
+            self.spaces += 25
 
         # Position of the player
         self.current_pos = None
@@ -166,6 +180,9 @@ class Setup:
             elif self.instruction_page:
                 self.start_inst_button.draw(self.screen, (18, 1, 1), self.start_inst_button.height // 2)
                 self.back_button.draw(self.screen, (18, 1, 1), self.back_button.height // 2) 
+
+                for text in self.instruction_text:
+                    text.draw(self.screen)
 
             elif self.difficulty_page:
                 self.easy_button.draw(self.screen, (18, 1, 1), self.easy_button.height // 2) 
@@ -340,23 +357,23 @@ class Setup:
                             font_list = [('BFS', (self.quadrant1_end[0] - int(self.quadrant1_end[0]*.3) ,self.quadrant1_end[1] - int(self.quadrant1_end[1]*.5))), 
                                      ('A', (self.quadrant3_end[0] - int(self.quadrant1_end[0]*.3) ,self.quadrant3_end[1] - int(self.quadrant3_end[1]*.25))), 
                                      ('DFS', (self.quadrant4_end[0] - int(self.quadrant1_end[0]*.3) ,self.quadrant4_end[1] - int(self.quadrant4_end[1]*.25)))]
-                            maze_list = [(self.quadrant1[0]+100, self.quadrant1[1]+30,  map.easy), (self.quadrant4[0]+100, self.quadrant4[1]+30,  map.easy), 
-                                     (self.quadrant2[0]+100, self.quadrant2[1]+30,  map.easy), (self.quadrant3[0]+100, self.quadrant3[1]+30,  map.easy)]
+                            maze_list = [(self.quadrant1[0]+100, self.quadrant1[1]+30,  map.custom), (self.quadrant4[0]+100, self.quadrant4[1]+30,  map.custom), 
+                                     (self.quadrant2[0]+100, self.quadrant2[1]+30,  map.custom), (self.quadrant3[0]+100, self.quadrant3[1]+30,  map.custom)]
                             fog = 50
                             tile = self.tile_size_easy
                         elif size == 10:
-                            maze_list = [(self.quadrant1[0]+100, self.quadrant1[1]+20,  map.medium), (self.quadrant4[0]+100, self.quadrant4[1]+20,  map.medium), 
-                                     (self.quadrant2[0]+100, self.quadrant2[1]+20,  map.medium), (self.quadrant3[0]+100, self.quadrant3[1]+20,  map.medium)]
+                            maze_list = [(self.quadrant1[0]+100, self.quadrant1[1]+20,  map.custom), (self.quadrant4[0]+100, self.quadrant4[1]+20,  map.custom), 
+                                     (self.quadrant2[0]+100, self.quadrant2[1]+20,  map.custom), (self.quadrant3[0]+100, self.quadrant3[1]+20,  map.custom)]
                             fog = 48
                             tile = self.tile_size_medium
                         elif size == 14:
-                            maze_list = [(self.quadrant1[0]+100, self.quadrant1[1]+20,  map.hard), (self.quadrant4[0]+100, self.quadrant4[1]+20,  map.hard), 
-                                     (self.quadrant2[0]+100, self.quadrant2[1]+20,  map.hard), (self.quadrant3[0]+100, self.quadrant3[1]+20,  map.hard)]
+                            maze_list = [(self.quadrant1[0]+100, self.quadrant1[1]+20,  map.custom), (self.quadrant4[0]+100, self.quadrant4[1]+20,  map.custom), 
+                                     (self.quadrant2[0]+100, self.quadrant2[1]+20,  map.custom), (self.quadrant3[0]+100, self.quadrant3[1]+20,  map.custom)]
                             fog = 34
                             tile = self.tile_size_hard
                         else:
-                            maze_list = [(self.quadrant1[0]+100, self.quadrant1[1]+10,  map.god), (self.quadrant4[0]+100, self.quadrant4[1]+10,  map.god), 
-                                     (self.quadrant2[0]+100, self.quadrant2[1]+10,  map.god), (self.quadrant3[0]+100, self.quadrant3[1]+10,  map.god)]
+                            maze_list = [(self.quadrant1[0]+100, self.quadrant1[1]+10,  map.custom), (self.quadrant4[0]+100, self.quadrant4[1]+10,  map.custom), 
+                                     (self.quadrant2[0]+100, self.quadrant2[1]+10,  map.custom), (self.quadrant3[0]+100, self.quadrant3[1]+10,  map.custom)]
                             fog = 20
                             tile = self.tile_size_god
 
