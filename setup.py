@@ -145,8 +145,8 @@ class Setup:
                     self.mode.bfs_agent.draw(self.screen, self.current_pos_bfs) # bfs agent
 
             elif self.main_page:
-                self.start_button.draw(self.screen, (18, 1, 1), 60)
-                self.instruction_button.draw(self.screen, (18, 1, 1),42)
+                self.start_button.draw(self.screen, (18, 1, 1), self.start_button.height // 2)
+                self.instruction_button.draw(self.screen, (18, 1, 1), (self.instruction_button.height // 2) - 15)
 
                 # Revert all the position to none
                 self.current_pos = None
@@ -155,22 +155,22 @@ class Setup:
                 self.current_pos_bfs = None
 
             elif self.instruction_page:
-                self.start_inst_button.draw(self.screen, (18, 1, 1), 30)
-                self.back_button.draw(self.screen, (18, 1, 1), 30) 
+                self.start_inst_button.draw(self.screen, (18, 1, 1), self.start_inst_button.height // 2)
+                self.back_button.draw(self.screen, (18, 1, 1), self.back_button.height // 2) 
 
             elif self.difficulty_page:
-                self.easy_button.draw(self.screen, (18, 1, 1), 60) 
-                self.medium_button.draw(self.screen, (18, 1, 1), 60) 
-                self.hard_button.draw(self.screen, (18, 1, 1), 60) 
-                self.god_button.draw(self.screen, (18, 1, 1), 60) 
-                self.custom_button.draw(self.screen, (18, 1, 1), 60) 
-                self.back_m_button.draw(self.screen, (18, 1, 1), 60) 
+                self.easy_button.draw(self.screen, (18, 1, 1), self.easy_button.height // 2) 
+                self.medium_button.draw(self.screen, (18, 1, 1), self.medium_button.height // 2) 
+                self.hard_button.draw(self.screen, (18, 1, 1), self.hard_button.height // 2) 
+                self.god_button.draw(self.screen, (18, 1, 1), self.god_button.height // 2) 
+                self.custom_button.draw(self.screen, (18, 1, 1), self.custom_button.height // 2) 
+                self.back_m_button.draw(self.screen, (18, 1, 1), self.back_m_button.height // 2) 
             elif self.win_page:
                 self.won.draw(self.screen) 
-                self.main_button.draw(self.screen, (18, 1, 1), 60)
+                self.main_button.draw(self.screen, (18, 1, 1), self.main_button.height // 2)
             elif self.lose_page:
                 self.lost.draw(self.screen) 
-                self.main_button.draw(self.screen, (18, 1, 1), 60)
+                self.main_button.draw(self.screen, (18, 1, 1), self.main_button.height // 2)
 
             # Handle all events
             self.event_handler()
