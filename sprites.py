@@ -50,13 +50,13 @@ class Maze:
             if len(self.maze) <= 6:
                 self.tile = 50
             elif len(self.maze) <= 10:
-                self.tile = 40
+                self.tile = 33
             elif len(self.maze) <= 14:
-                self.tile = 30
+                self.tile = 24
             elif len(self.maze) <= 20:
-                self.tile = 20
+                self.tile = 18
             else: 
-                self.tile = 10
+                self.tile = 8
 
         row_count = 0
         # Add the type of block on a specific screen position

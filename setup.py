@@ -278,12 +278,12 @@ class Setup:
 
                     # Set the mode of the game and switch to gamepage
                     if self.easy_button.is_over(pos):
-                        font_list = [('BFS', (self.quadrant1_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant1_end[1] - int(self.quadrant1_end[1]*.5))), 
-                                     ('A', (self.quadrant3_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant3_end[1] - int(self.quadrant3_end[1]*.25))), 
-                                     ('DFS', (self.quadrant4_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant4_end[1] - int(self.quadrant4_end[1]*.25)))]
+                        font_list = [('BFS', (self.quadrant1_end[0] - int(self.quadrant1_end[0]*.3) ,self.quadrant1_end[1] - int(self.quadrant1_end[1]*.5))), 
+                                     ('A', (self.quadrant3_end[0] - int(self.quadrant1_end[0]*.3) ,self.quadrant3_end[1] - int(self.quadrant3_end[1]*.25))), 
+                                     ('DFS', (self.quadrant4_end[0] - int(self.quadrant1_end[0]*.3) ,self.quadrant4_end[1] - int(self.quadrant4_end[1]*.25)))]
                         # UPPER LEFT, LOWER RIGHT, UPPER RIGHT, LOWER LEFT
-                        maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.easy), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.easy), 
-                                     (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.easy), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.easy)]
+                        maze_list = [(self.quadrant1[0]+60, self.quadrant1[1]+30,  map.easy), (self.quadrant4[0]+60, self.quadrant4[1]+30,  map.easy), 
+                                     (self.quadrant2[0]+60, self.quadrant2[1]+30,  map.easy), (self.quadrant3[0]+60, self.quadrant3[1]+30,  map.easy)]
                         self.mode = mode(font_list, maze_list, 50)
 
                         self.difficulty_page = False
@@ -293,8 +293,8 @@ class Setup:
                         font_list = [('BFS', (self.quadrant1_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant1_end[1] - int(self.quadrant1_end[1]*.5))), 
                                      ('A', (self.quadrant3_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant3_end[1] - int(self.quadrant3_end[1]*.25))), 
                                      ('DFS', (self.quadrant4_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant4_end[1] - int(self.quadrant4_end[1]*.25)))]
-                        maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.medium), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.medium), 
-                                     (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.medium), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.medium)]
+                        maze_list = [(self.quadrant1[0]+40, self.quadrant1[1]+20,  map.medium), (self.quadrant4[0]+40, self.quadrant4[1]+20,  map.medium), 
+                                     (self.quadrant2[0]+40, self.quadrant2[1]+20,  map.medium), (self.quadrant3[0]+40, self.quadrant3[1]+20,  map.medium)]
                         self.mode = mode(font_list, maze_list, 48)
 
                         self.difficulty_page = False
@@ -304,8 +304,8 @@ class Setup:
                         font_list = [('BFS', (self.quadrant1_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant1_end[1] - int(self.quadrant1_end[1]*.5))), 
                                      ('A', (self.quadrant3_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant3_end[1] - int(self.quadrant3_end[1]*.25))), 
                                      ('DFS', (self.quadrant4_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant4_end[1] - int(self.quadrant4_end[1]*.25)))]
-                        maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.hard), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.hard), 
-                                     (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.hard), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.hard)]
+                        maze_list = [(self.quadrant1[0]+50, self.quadrant1[1]+20,  map.hard), (self.quadrant4[0]+50, self.quadrant4[1]+20,  map.hard), 
+                                     (self.quadrant2[0]+50, self.quadrant2[1]+20,  map.hard), (self.quadrant3[0]+50, self.quadrant3[1]+20,  map.hard)]
                         self.mode = mode(font_list, maze_list,34)
 
                         self.difficulty_page = False
@@ -315,8 +315,8 @@ class Setup:
                         font_list = [('BFS', (self.quadrant1_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant1_end[1] - int(self.quadrant1_end[1]*.5))), 
                                      ('A', (self.quadrant3_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant3_end[1] - int(self.quadrant3_end[1]*.25))), 
                                      ('DFS', (self.quadrant4_end[0] - int(self.quadrant1_end[0]*.15) ,self.quadrant4_end[1] - int(self.quadrant4_end[1]*.25)))]
-                        maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.god), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.god), 
-                                     (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.god), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.god)]
+                        maze_list = [(self.quadrant1[0]+60, self.quadrant1[1]+10,  map.god), (self.quadrant4[0]+60, self.quadrant4[1]+10,  map.god), 
+                                     (self.quadrant2[0]+60, self.quadrant2[1]+10,  map.god), (self.quadrant3[0]+60, self.quadrant3[1]+10,  map.god)]
                         self.mode = mode(font_list, maze_list, 20)
 
                         self.difficulty_page = False
@@ -328,20 +328,23 @@ class Setup:
                         size = map.calc_custom()
                         # Map sizes
                         if size == 6:
-                            maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.custom), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.custom), 
-                                     (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.custom), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.custom)]
+                            font_list = [('BFS', (self.quadrant1_end[0] - int(self.quadrant1_end[0]*.3) ,self.quadrant1_end[1] - int(self.quadrant1_end[1]*.5))), 
+                                     ('A', (self.quadrant3_end[0] - int(self.quadrant1_end[0]*.3) ,self.quadrant3_end[1] - int(self.quadrant3_end[1]*.25))), 
+                                     ('DFS', (self.quadrant4_end[0] - int(self.quadrant1_end[0]*.3) ,self.quadrant4_end[1] - int(self.quadrant4_end[1]*.25)))]
+                            maze_list = [(self.quadrant1[0]+60, self.quadrant1[1]+30,  map.easy), (self.quadrant4[0]+60, self.quadrant4[1]+30,  map.easy), 
+                                     (self.quadrant2[0]+60, self.quadrant2[1]+30,  map.easy), (self.quadrant3[0]+60, self.quadrant3[1]+30,  map.easy)]
                             fog = 50
                         elif size == 10:
-                            maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.custom), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.custom), 
-                                     (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.custom), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.custom)]
+                            maze_list = [(self.quadrant1[0]+40, self.quadrant1[1]+20,  map.medium), (self.quadrant4[0]+40, self.quadrant4[1]+20,  map.medium), 
+                                     (self.quadrant2[0]+40, self.quadrant2[1]+20,  map.medium), (self.quadrant3[0]+40, self.quadrant3[1]+20,  map.medium)]
                             fog = 48
                         elif size == 14:
-                            maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.custom), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.custom), 
-                                     (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.custom), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.custom)]
+                            maze_list = [(self.quadrant1[0]+50, self.quadrant1[1]+20,  map.hard), (self.quadrant4[0]+50, self.quadrant4[1]+20,  map.hard), 
+                                     (self.quadrant2[0]+50, self.quadrant2[1]+20,  map.hard), (self.quadrant3[0]+50, self.quadrant3[1]+20,  map.hard)]
                             fog = 34
                         else:
-                            maze_list = [(self.quadrant1[0]+30, self.quadrant1[1]+30,  map.custom), (self.quadrant4[0]+30, self.quadrant4[1]+30,  map.custom), 
-                                     (self.quadrant2[0]+30, self.quadrant2[1]+30,  map.custom), (self.quadrant3[0]+30, self.quadrant3[1]+30,  map.custom)]
+                            maze_list = [(self.quadrant1[0]+60, self.quadrant1[1]+10,  map.god), (self.quadrant4[0]+60, self.quadrant4[1]+10,  map.god), 
+                                     (self.quadrant2[0]+60, self.quadrant2[1]+10,  map.god), (self.quadrant3[0]+60, self.quadrant3[1]+10,  map.god)]
                             fog = 20
 
                         self.mode = mode(font_list, maze_list, fog)
