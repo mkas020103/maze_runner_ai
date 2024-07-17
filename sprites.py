@@ -329,7 +329,8 @@ class mode:
         self.fog_bfs.draw(win)
         self.fog_dfs.draw(win)
         self.fog_a.draw(win)
-        self.fog_maam.draw(win)
+        if self.fog_maam:
+            self.fog_maam.draw(win)
 
 class button:
     """

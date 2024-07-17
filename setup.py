@@ -4,6 +4,7 @@ import map
 from sprites import *
 import os
 import pyautogui
+import time
 
 class Setup:
     """
@@ -122,6 +123,11 @@ class Setup:
         # Maze positions
         self.pos = []
 
+        # Player Fog show on screen
+        self.switch_fog = None
+        self.countdown_start_time = None
+        self.countdown = 0
+
     def run(self):
         while self.running:
             # Show the background and design (Take note that the order matters to show all images)
@@ -143,6 +149,9 @@ class Setup:
                     self.mode.a_agent.draw(self.screen, self.current_pos_a) # a agent
                     self.mode.dfs_agent.draw(self.screen, self.current_pos_dfs) # dfs agent
                     self.mode.bfs_agent.draw(self.screen, self.current_pos_bfs) # bfs agent
+
+                    # Handle fog switching
+                    self.handle_fog_switch()
 
             elif self.main_page:
                 self.start_button.draw(self.screen, (18, 1, 1), self.start_button.height // 2)
@@ -437,6 +446,20 @@ class Setup:
                     else:
                         self.main_button.color = self.b_color   
 
+    def handle_fog_switch(self):
+        if self.countdown > 0:
+            elapsed_time = time.time() - self.countdown_start_time
+            if elapsed_time >= self.countdown:
+                self.countdown = 0
+                self.mode.fog_maam = self.switch_fog
+                self.switch_fog = None
+            else:
+                if self.switch_fog is None:
+                    self.switch_fog = self.mode.fog_maam
+                    self.mode.fog_maam = None
+        else:
+            self.switch_fog = None
+
     def update_move_and_map(self, block):
         # Modify the position of Human Player and Remove adjacent clouds
         self.current_pos = (block[1][0],block[1][1])
@@ -559,15 +582,8 @@ class Setup:
     def violet_power(self, block):
         if self.mode.violet_power_maam_img: # Player
             if self.current_pos == self.mode.violet_power_maam.pos:
-                # Move one point closer to the finish point
-                self.current_pos = self.mode.violet_power_maam.move_closer(self.mode.player.can_explore)
-
-                # Update fog
-                self.mode.fog_maam.remove_adjacent_smokes(self.current_pos, block[1][2])
-                self.mode.fog_maam.remove_current_smoke(self.current_pos, block[1][2])
-
-                # Update explored, unexplored, and can explroe paths
-                self.mode.player.update_path(self.current_pos, block[1][2])
+                self.countdown = .5
+                self.countdown_start_time = time.time()
 
         if self.mode.violet_power_a_img: # A agent
             if self.current_pos_a == self.mode.violet_power_a.pos:
@@ -582,7 +598,7 @@ class Setup:
 
                 # Update explored, unexplored, and can explore paths
                 self.mode.a_agent.update_path(self.current_pos_a)
-                
+
                 # Move one point closer to the finish point
                 inner_tuples = [outer for outer in self.mode.a_agent.can_explore]
                 innest_tuples = [tuples for tuples, value in inner_tuples]
